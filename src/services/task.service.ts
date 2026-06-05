@@ -283,6 +283,7 @@ export const taskService = {
     getMyTasks: async (params?: {
         page?: number;
         limit?: number;
+        search?: string;
         status?: string;
         projectId?: string;
     }) => {
@@ -292,6 +293,7 @@ export const taskService = {
 
             if (params?.page) url.searchParams.set("page", params.page.toString());
             if (params?.limit) url.searchParams.set("limit", params.limit.toString());
+            if (params?.search) url.searchParams.set("search", params.search);
             if (params?.status && params.status !== "all") url.searchParams.set("status", params.status);
             if (params?.projectId) url.searchParams.set("projectId", params.projectId);
 

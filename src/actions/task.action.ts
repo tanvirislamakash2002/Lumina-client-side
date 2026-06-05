@@ -165,6 +165,7 @@ export const updateTaskStatus = async (taskId: string, status: string, projectId
 export const getMyTasks = async (params?: {
     page?: number;
     limit?: number;
+    search?: string;
     status?: string;
     projectId?: string;
 }) => {
