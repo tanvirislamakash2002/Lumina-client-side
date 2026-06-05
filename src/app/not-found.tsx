@@ -1,16 +1,16 @@
 import Link from "next/link";
-import { Home, Search, Lightbulb, ArrowLeft } from "lucide-react";
+import { Home, Search, LayoutDashboard, ArrowLeft, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function NotFound() {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-slate-100 dark:from-gray-950 dark:to-slate-950 p-4">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/20 dark:to-purple-950/20 p-4">
             <Card className="max-w-md w-full shadow-lg">
                 <CardHeader className="text-center">
                     <div className="flex justify-center mb-4">
-                        <div className="w-20 h-20 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                            <Search className="h-10 w-10 text-amber-600 dark:text-amber-400" />
+                        <div className="w-20 h-20 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
+                            <Search className="h-10 w-10 text-indigo-600 dark:text-indigo-400" />
                         </div>
                     </div>
                     <CardTitle className="text-3xl font-bold">404</CardTitle>
@@ -32,39 +32,39 @@ export default function NotFound() {
                         <p className="text-sm font-medium">Here are some helpful links:</p>
                         <div className="flex flex-wrap gap-2 justify-center">
                             <Button asChild variant="outline" size="sm">
-                                <Link href="/ideas">Browse Ideas</Link>
+                                <Link href="/dashboard">Go to Dashboard</Link>
                             </Button>
                             <Button asChild variant="outline" size="sm">
-                                <Link href="/about">About Us</Link>
+                                <Link href="/projects">Browse Projects</Link>
                             </Button>
                             <Button asChild variant="outline" size="sm">
-                                <Link href="/contact">Contact</Link>
+                                <Link href="/team">View Team</Link>
                             </Button>
                         </div>
                     </div>
                     
-                    {/* Lightbulb Suggestion */}
-                    <div className="mt-4 p-3 bg-green-50 dark:bg-green-950/20 rounded-lg">
+                    {/* Sparkles Suggestion */}
+                    <div className="mt-4 p-3 bg-indigo-50 dark:bg-indigo-950/20 rounded-lg">
                         <div className="flex items-center gap-2 justify-center">
-                            <Lightbulb className="h-4 w-4 text-green-600" />
-                            <span className="text-sm text-green-700 dark:text-green-400">
-                                Have an idea? Share it with our community!
+                            <Sparkles className="h-4 w-4 text-indigo-600" />
+                            <span className="text-sm text-indigo-700 dark:text-indigo-400">
+                                Ready to streamline your workflow? Get started with a project!
                             </span>
                         </div>
                     </div>
                 </CardContent>
                 
                 <CardFooter className="flex flex-col sm:flex-row gap-3 justify-center">
-                    <Button asChild variant="default" className="gap-2">
+                    <Button asChild variant="default" className="gap-2 bg-indigo-600 hover:bg-indigo-700">
                         <Link href="/">
                             <Home className="h-4 w-4" />
                             Go Home
                         </Link>
                     </Button>
                     <Button asChild variant="outline" className="gap-2">
-                        <Link href="/ideas">
-                            <Search className="h-4 w-4" />
-                            Browse Ideas
+                        <Link href="/dashboard">
+                            <LayoutDashboard className="h-4 w-4" />
+                            Dashboard
                         </Link>
                     </Button>
                 </CardFooter>

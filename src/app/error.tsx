@@ -2,16 +2,16 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { AlertTriangle, Home, RefreshCw, Bug } from "lucide-react";
+import { AlertTriangle, Home, RefreshCw, Bug, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
-interface ShopErrorProps {
+interface ErrorProps {
     error: Error & { digest?: string };
     reset: () => void;
 }
 
-export default function ShopError({ error, reset }: ShopErrorProps) {
+export default function AppError({ error, reset }: ErrorProps) {
     useEffect(() => {
         // Log the error to an error reporting service
         console.error("Application error:", {
@@ -72,6 +72,23 @@ export default function ShopError({ error, reset }: ShopErrorProps) {
                     <div className="text-sm text-muted-foreground text-center space-y-1">
                         <p>This error has been logged and will be investigated.</p>
                         <p>If the problem persists, please contact support.</p>
+                    </div>
+                    
+                    {/* Quick Actions */}
+                    <div className="pt-2">
+                        <p className="text-xs text-center text-muted-foreground mb-2">You can try:</p>
+                        <div className="flex flex-wrap gap-2 justify-center">
+                            <Button onClick={reset} variant="outline" size="sm" className="gap-1">
+                                <RefreshCw className="h-3 w-3" />
+                                Refresh Page
+                            </Button>
+                            <Button asChild variant="outline" size="sm" className="gap-1">
+                                <Link href="/dashboard">
+                                    <LayoutDashboard className="h-3 w-3" />
+                                    Go to Dashboard
+                                </Link>
+                            </Button>
+                        </div>
                     </div>
                 </CardContent>
                 
