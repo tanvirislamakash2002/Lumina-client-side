@@ -43,6 +43,20 @@ export const createTask = async (
     return result;
 };
 
+// Get all tasks (across all accessible projects)
+export const getAllTasks = async (params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    priority?: string;
+    projectId?: string;
+    assignedTo?: string;
+    sortBy?: string;
+}) => {
+    return await taskService.getAllTasks(params);
+};
+
 // Get tasks for a project
 export const getTasks = async (
     projectId: string,

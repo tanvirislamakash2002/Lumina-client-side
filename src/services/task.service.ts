@@ -46,6 +46,48 @@ export const taskService = {
         }
     },
 
+    // Get all tasks (across all accessible projects)
+    getAllTasks: async (params?: {
+        page?: number;
+        limit?: number;
+        search?: string;
+        status?: string;
+        priority?: string;
+        projectId?: string;
+        assignedTo?: string;
+        sortBy?: string;
+    }) => {
+        try {
+            const cookieStore = await cookies();
+            const url = new URL(`${API_URL}/tasks`);  // ← No projectId in URL
+
+            if (params?.page) url.searchParams.set("page", params.page.toString());
+            if (params?.limit) url.searchParams.set("limit", params.limit.toString());
+            if (params?.search) url.searchParams.set("search", params.search);
+            if (params?.status && params.status !== "all") url.searchParams.set("status", params.status);
+            if (params?.priority && params.priority !== "all") url.searchParams.set("priority", params.priority);
+            if (params?.projectId && params.projectId !== "all") url.searchParams.set("projectId", params.projectId);
+            if (params?.assignedTo && params.assignedTo !== "all") url.searchParams.set("assignedTo", params.assignedTo);
+            if (params?.sortBy) url.searchParams.set("sortBy", params.sortBy);
+
+            const res = await fetch(url.toString(), {
+                headers: { Cookie: cookieStore.toString() },
+                next: { tags: ["all-tasks"] },
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                return { success: false, message: data.message || "Failed to fetch tasks" };
+            }
+
+            return { success: true, data: data.data };
+        } catch (error) {
+            console.error("Get all tasks error:", error);
+            return { success: false, message: "Something went wrong" };
+        }
+    },
+
     // Get tasks for a project (with filters and pagination)
     getTasks: async (
         projectId: string,
