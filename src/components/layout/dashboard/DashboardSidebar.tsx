@@ -73,18 +73,18 @@ const commonRoutes = [
             { title: "Team", url: "/team", icon: Users },
         ],
     },
-    {
-        title: "Activity",
-        items: [
-            { title: "Notifications", url: "/notifications", icon: Bell },
-            // { title: "Activity Log", url: "/activities", icon: Activity },
-        ],
-    },
+    // {
+    //     title: "Activity",
+    //     items: [
+    //         { title: "Notifications", url: "/notifications", icon: Bell },
+    //         { title: "Activity Log", url: "/activities", icon: Activity },
+    //     ],
+    // },
     {
         title: "Account",
         items: [
             { title: "Profile", url: "/profile", icon: User },
-            { title: "Settings", url: "/settings/notifications", icon: Settings },
+            { title: "Settings", url: "/settings", icon: Settings },
         ],
     },
 ];
