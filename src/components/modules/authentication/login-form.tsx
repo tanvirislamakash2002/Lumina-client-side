@@ -38,9 +38,9 @@ const formSchema = z.object({
 });
 
 const DEMO_CREDENTIALS = {
-  admin: { email: "admin@lumina.com", password: "admin123", role: "ADMIN" },
-  projectManager: { email: "pm@lumina.com", password: "pm123", role: "PROJECT_MANAGER" },
-  teamMember: { email: "member@lumina.com", password: "member123", role: "TEAM_MEMBER" },
+  admin: { email: "westbrook@gmail.com", password: "westbrook123", role: "ADMIN" },
+  projectManager: { email: "ellis@gmail.com", password: "ellis123", role: "PROJECT_MANAGER" },
+  teamMember: { email: "monroe@gmail.com", password: "monroe123", role: "TEAM_MEMBER" },
 };
 
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
@@ -382,7 +382,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
             </Button>
           </div>
           <p className="text-xs text-center text-muted-foreground">
-            Demo: admin@lumina.com / admin123 | pm@lumina.com / pm123 | member@lumina.com / member123
+            Demo: westbrook@gmail.com / westbrook123 | ellis@gmail.com / ellis123 | monroe@gmail.com / monroe123
           </p>
         </div>
       </CardFooter>
