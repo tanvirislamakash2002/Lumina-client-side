@@ -185,11 +185,15 @@ export const activityService = {
     ) => {
         try {
             const cookieStore = await cookies();
-            const url = new URL(`${API_URL}/activities/user/me`);
+            let url: URL;
 
-            // If userId is provided and different, use the admin endpoint
+            // Build URL based on whether userId is provided
             if (userId) {
-                url.pathname = `/activities/user/${userId}`;
+                // For admin viewing another user's activities
+                url = new URL(`${API_URL}/activities/user/${userId}`);
+            } else {
+                // For current user's own activities
+                url = new URL(`${API_URL}/activities/user/me`);
             }
 
             if (params?.page) url.searchParams.set("page", params.page.toString());

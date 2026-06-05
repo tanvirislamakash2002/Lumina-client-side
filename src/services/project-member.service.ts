@@ -223,4 +223,49 @@ export const projectMemberService = {
             };
         }
     },
+
+    // Get projects for a specific user (admin/PM only)
+getUserProjectsById: async (
+    userId: string,
+    params?: {
+        page?: number;
+        limit?: number;
+    }
+) => {
+    try {
+        const cookieStore = await cookies();
+        // ✅ Change to use users endpoint (which exists)
+        const url = new URL(`${API_URL}/users/${userId}/projects`);
+
+        if (params?.page) url.searchParams.set("page", params.page.toString());
+        if (params?.limit) url.searchParams.set("limit", params.limit.toString());
+
+        const res = await fetch(url.toString(), {
+            headers: {
+                Cookie: cookieStore.toString(),
+            },
+            next: { tags: [`user-projects-${userId}`] },
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            return {
+                success: false,
+                message: data.message || "Failed to fetch user projects",
+            };
+        }
+
+        return {
+            success: true,
+            data: data.data,
+        };
+    } catch (error) {
+        console.error("Get user projects by ID error:", error);
+        return {
+            success: false,
+            message: "Something went wrong",
+        };
+    }
+},
 };

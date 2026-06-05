@@ -90,6 +90,23 @@ export const getAvailableMembers = async (projectId: string, search?: string, li
     return await projectMemberService.getAvailableMembers(projectId, search, limit);
 };
 
+// Get projects for a specific user (admin/PM only)
+export const getUserProjectsById = async (
+    userId: string,
+    params?: {
+        page?: number;
+        limit?: number;
+    }
+) => {
+    if (!userId) {
+        return {
+            success: false,
+            message: "User ID is required",
+        };
+    }
+    return await projectMemberService.getUserProjectsById(userId, params);
+};
+
 // Revalidate project member data
 export const revalidateProjectMembers = async (projectId: string) => {
     updateTag(`project-members-${projectId}`);
