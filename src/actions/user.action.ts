@@ -88,6 +88,17 @@ export const getTeamMembers = async (search?: string, limit?: number) => {
     return await userService.getTeamMembers(search, limit);
 };
 
+export const getTeamMembersWithProjects = async (
+    currentUserId: string,
+    userRole: string,
+    params?: {
+        projectId?: string;
+        search?: string;
+    }
+) => {
+    return await userService.getTeamMembersWithProjects(currentUserId, userRole, params);
+};
+
 // Revalidate user data
 export const revalidateUser = async () => {
     updateTag("user-profile");

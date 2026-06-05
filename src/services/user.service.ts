@@ -311,4 +311,52 @@ export const userService = {
             };
         }
     },
+    getTeamMembersWithProjects: async (
+    currentUserId: string,
+    userRole: string,
+    params?: {
+        projectId?: string;
+        search?: string;
+    }
+) => {
+    try {
+        const cookieStore = await cookies();
+        const url = new URL(`${API_URL}/users/team-members`);
+
+        // Add query parameters
+        if (params?.projectId) url.searchParams.set("projectId", params.projectId);
+        if (params?.search) url.searchParams.set("search", params.search);
+        
+        // Add user context
+        url.searchParams.set("currentUserId", currentUserId);
+        url.searchParams.set("userRole", userRole);
+
+        const res = await fetch(url.toString(), {
+            headers: {
+                Cookie: cookieStore.toString(),
+            },
+            next: { tags: ["team-members"] },
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+            return {
+                success: false,
+                message: data.message || "Failed to fetch team members",
+            };
+        }
+
+        return {
+            success: true,
+            data: data.data,
+        };
+    } catch (error) {
+        console.error("Get team members with projects error:", error);
+        return {
+            success: false,
+            message: "Something went wrong",
+        };
+    }
+},
 };
+
