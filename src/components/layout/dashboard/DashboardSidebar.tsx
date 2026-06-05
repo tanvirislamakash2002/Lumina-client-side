@@ -34,7 +34,8 @@ import {
     Tag,
     Mail,
     FileText,
-    Home
+    Home,
+    UserCheck
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -67,7 +68,8 @@ const commonRoutes = [
         title: "Work",
         items: [
             { title: "Projects", url: "/projects", icon: FolderKanban },
-            { title: "My Tasks", url: "/my-tasks", icon: CheckSquare },
+            { title: "Tasks", url: "/tasks", icon: CheckSquare },
+            { title: "My Tasks", url: "/my-tasks", icon: UserCheck },
             { title: "Team", url: "/team", icon: Users },
         ],
     },
@@ -141,10 +143,10 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         .toUpperCase()
         .slice(0, 2);
 
-    const roleDisplay = user.role === "ADMIN" 
-        ? "Admin" 
-        : user.role === "PROJECT_MANAGER" 
-            ? "Project Manager" 
+    const roleDisplay = user.role === "ADMIN"
+        ? "Admin"
+        : user.role === "PROJECT_MANAGER"
+            ? "Project Manager"
             : "Team Member";
 
     return (
