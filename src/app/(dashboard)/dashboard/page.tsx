@@ -1,8 +1,12 @@
 import { getSession } from "@/actions/auth.action";
 import { redirect } from "next/navigation";
 import { Roles } from "@/constants/roles";
+import { DashboardClient } from "@/components/modules/dashboard/dashboard/DashboardClient";
+import { getDashboard } from "@/actions/dashboard.action";
 
-export default async function DashboardIndex() {
+export const dynamic = "force-dynamic";
+
+export default async function DashboardPage() {
     const { data: session } = await getSession();
 
     if (!session?.user) {
@@ -13,7 +17,14 @@ export default async function DashboardIndex() {
 
     if (userRole === Roles.ADMIN) {
         redirect("/admin");
-    } else {
-        redirect("/dashboard");
     }
+
+    const dashboardData = await getDashboard();
+
+    return (
+        <DashboardClient 
+            initialData={dashboardData.success ? dashboardData.data : null}
+            userRole={userRole}
+        />
+    );
 }

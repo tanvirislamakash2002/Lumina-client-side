@@ -1,7 +1,7 @@
 import { env } from "@/env";
 import { cookies } from "next/headers";
 
-const API_URL = env.AUTH_URL;
+const API_URL = env.API_URL;
 
 export const statsService = {
     // Get platform-wide statistics (public)
