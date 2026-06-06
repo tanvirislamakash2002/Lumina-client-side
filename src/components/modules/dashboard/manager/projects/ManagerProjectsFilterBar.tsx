@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -34,6 +34,7 @@ export function ManagerProjectsFilterBar({
     const [status, setStatus] = useState(currentStatus);
     const [sortBy, setSortBy] = useState(currentSortBy);
     const [debouncedSearch, setDebouncedSearch] = useState(currentSearch);
+    const initialRender = useRef(true);
 
     // Debounce search input
     useEffect(() => {
@@ -43,15 +44,31 @@ export function ManagerProjectsFilterBar({
         return () => clearTimeout(timer);
     }, [search]);
 
-    // Trigger search when debounced value changes
+    // Trigger search ONLY when values actually change from initial props
     useEffect(() => {
-        onSearch(debouncedSearch, status, sortBy);
-    }, [debouncedSearch, status, sortBy, onSearch]);
+        // Skip the first render to avoid unnecessary calls
+        if (initialRender.current) {
+            initialRender.current = false;
+            return;
+        }
+
+        // Check if values have actually changed from current props
+        const searchChanged = debouncedSearch !== currentSearch;
+        const statusChanged = status !== currentStatus;
+        const sortByChanged = sortBy !== currentSortBy;
+
+        // Only call onSearch if something actually changed
+        if (searchChanged || statusChanged || sortByChanged) {
+            onSearch(debouncedSearch, status, sortBy);
+        }
+    }, [debouncedSearch, status, sortBy, currentSearch, currentStatus, currentSortBy, onSearch]);
 
     const handleClearFilters = () => {
         setSearch("");
         setStatus("all");
         setSortBy("latest");
+        // Immediately trigger search with cleared values
+        onSearch("", "all", "latest");
     };
 
     const hasActiveFilters = search !== "" || status !== "all" || sortBy !== "latest";

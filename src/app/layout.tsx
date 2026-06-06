@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GreenSpark",
-  description: "A Idea shearing platform",
+  title: "Lumina",
+  description: "project management office app",
 };
 
 export default function RootLayout({

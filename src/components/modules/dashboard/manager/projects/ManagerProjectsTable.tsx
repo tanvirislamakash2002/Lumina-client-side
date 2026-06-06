@@ -130,7 +130,7 @@ export function ManagerProjectsTable({
                                         </td>
                                         <td className="p-4">
                                             <Link
-                                                href={`/projects/${project.id}`}
+                                                href={`/dashboard/projects/${project.id}`}
                                                 className="font-medium hover:text-indigo-600 transition-colors"
                                             >
                                                 {project.name}
@@ -181,7 +181,7 @@ export function ManagerProjectsTable({
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuItem asChild>
-                                                        <Link href={`/projects/${project.id}`} className="flex items-center gap-2">
+                                                        <Link href={`/dashboard/projects/${project.id}`} className="flex items-center gap-2">
                                                             <ExternalLink className="h-4 w-4" />
                                                             View Details
                                                         </Link>

@@ -12,45 +12,33 @@ export const proxy = async (request: NextRequest) => {
         userRole = data.user.role;
     }
 
-    // Auth required for these routes
-    if (
-        pathName.startsWith("/dashboard") ||
-        pathName.startsWith("/projects") ||
-        pathName.startsWith("/tasks") ||
-        pathName.startsWith("/team") ||
-        pathName.startsWith("/settings") ||
-        pathName === "/profile"
-    ) {
+    // Auth required for dashboard routes
+    if (pathName.startsWith("/dashboard")) {
         if (!isAuthenticated) {
             return NextResponse.redirect(new URL("/login", request.url));
         }
     }
 
-    // Admin only routes
-    if (
-        (pathName.startsWith("/admin") || pathName === "/admin") &&
-        userRole !== "ADMIN"
-    ) {
+    // Admin only routes (under /dashboard/admin)
+    if (pathName.startsWith("/dashboard/admin") && isAuthenticated && userRole !== "ADMIN") {
         return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
-    // Project Manager only routes (or admin)
+    // Project Manager only routes (create/edit)
     if (
-        pathName.startsWith("/projects/create") &&
+        (pathName.startsWith("/dashboard/projects/create") ||
+         pathName.startsWith("/dashboard/tasks/create") ||
+         pathName.match(/\/dashboard\/projects\/[^/]+\/edit/) ||
+         pathName.match(/\/dashboard\/tasks\/[^/]+\/edit/)) &&
+        isAuthenticated &&
         userRole !== "ADMIN" &&
         userRole !== "PROJECT_MANAGER"
     ) {
         return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
-    // REMOVED: The redirect that sent Admin from /dashboard to /admin
-    // Now Admin users stay on /dashboard and see the @admin slot
-
     // Redirect to dashboard if already logged in and trying to access auth pages
     if ((pathName === "/login" || pathName === "/register") && isAuthenticated) {
-        if (userRole === "ADMIN") {
-            return NextResponse.redirect(new URL("/admin", request.url));
-        }
         return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
@@ -59,14 +47,7 @@ export const proxy = async (request: NextRequest) => {
 
 export const config = {
     matcher: [
-        "/dashboard",
         "/dashboard/:path*",
-        "/projects/:path*",
-        "/tasks/:path*",
-        "/team/:path*",
-        "/settings/:path*",
-        "/profile",
-        "/admin/:path*",
         "/login",
         "/register",
     ],

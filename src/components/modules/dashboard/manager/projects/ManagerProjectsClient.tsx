@@ -101,7 +101,7 @@ export function ManagerProjectsClient({
                 selectedProjects={selectedProjects}
                 onSelectAll={handleSelectAll}
                 onSelectProject={handleSelectProject}
-                onEdit={(project) => router.push(`/projects/${project.id}/edit`)}
+                onEdit={(project) => router.push(`/dashboard/projects/${project.id}/edit`)}
                 onDelete={(project) => {
                     setProjectToDelete(project);
                     setDeleteDialogOpen(true);
