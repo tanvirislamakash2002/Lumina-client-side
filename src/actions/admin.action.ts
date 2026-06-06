@@ -137,6 +137,7 @@ export const getAllProjects = async (params?: {
     limit?: number;
     search?: string;
     status?: string;
+    sort?: string;
 }) => {
     return await adminService.getAllProjects(params);
 };

@@ -95,6 +95,29 @@ export const deleteProject = async (projectId: string) => {
     return result;
 };
 
+export const bulkDeleteProjects = async (projectIds: string[]) => {
+    if (!projectIds || projectIds.length === 0) {
+        return {
+            success: false,
+            message: "Project IDs are required",
+        };
+    }
+
+    const result = await projectService.bulkDeleteProjects(projectIds);
+    if (result.success) {
+        updateTag("projects");
+        updateTag("dashboard");
+        updateTag("admin-projects");
+        // Revalidate each project individually
+        projectIds.forEach(projectId => {
+            updateTag(`project-${projectId}`);
+            updateTag(`project-stats-${projectId}`);
+            updateTag(`project-progress-${projectId}`);
+        });
+    }
+    return result;
+};
+
 // Get project statistics
 export const getProjectStats = async (projectId: string) => {
     if (!projectId) {

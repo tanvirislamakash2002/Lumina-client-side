@@ -191,6 +191,37 @@ export const projectService = {
         }
     },
 
+    bulkDeleteProjects: async (projectIds: string[]) => {
+        try {
+            const cookieStore = await cookies();
+            const res = await fetch(`${API_URL}/projects/bulk-delete`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Cookie: cookieStore.toString(),
+                },
+                body: JSON.stringify({ projectIds }),
+            });
+
+            const response = await res.json();
+
+            if (!res.ok) {
+                return {
+                    success: false,
+                    message: response.message || "Failed to delete projects",
+                };
+            }
+
+            return response;
+        } catch (error) {
+            console.error("Bulk delete projects error:", error);
+            return {
+                success: false,
+                message: "Something went wrong",
+            };
+        }
+    },
+
     // Get project statistics
     getProjectStats: async (projectId: string) => {
         try {

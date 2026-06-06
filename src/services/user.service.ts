@@ -166,48 +166,56 @@ export const userService = {
 
     // Get all users (admin only)
     getAllUsers: async (params?: {
-        page?: number;
-        limit?: number;
-        search?: string;
-        role?: string;
-    }) => {
-        try {
-            const cookieStore = await cookies();
-            const url = new URL(`${API_URL}/users`);
+    page?: number;
+    limit?: number;
+    search?: string;
+    role?: string;
+    status?: string;    // ← Add
+    verified?: string;  // ← Add
+    sort?: string;      // ← Add
+}) => {
+    try {
+        const cookieStore = await cookies();
+        const url = new URL(`${API_URL}/users`);
 
-            if (params?.page) url.searchParams.set("page", params.page.toString());
-            if (params?.limit) url.searchParams.set("limit", params.limit.toString());
-            if (params?.search) url.searchParams.set("search", params.search);
-            if (params?.role && params.role !== "all") url.searchParams.set("role", params.role);
+        if (params?.page) url.searchParams.set("page", params.page.toString());
+        if (params?.limit) url.searchParams.set("limit", params.limit.toString());
+        if (params?.search) url.searchParams.set("search", params.search);
+        if (params?.role && params.role !== "all") url.searchParams.set("role", params.role);
+        
+        // Add new filters
+        if (params?.status && params.status !== "all") url.searchParams.set("status", params.status);
+        if (params?.verified && params.verified !== "all") url.searchParams.set("verified", params.verified);
+        if (params?.sort) url.searchParams.set("sort", params.sort);
 
-            const res = await fetch(url.toString(), {
-                headers: {
-                    Cookie: cookieStore.toString(),
-                },
-                next: { tags: ["all-users"] },
-            });
+        const res = await fetch(url.toString(), {
+            headers: {
+                Cookie: cookieStore.toString(),
+            },
+            next: { tags: ["all-users"] },
+        });
 
-            const data = await res.json();
+        const data = await res.json();
 
-            if (!res.ok) {
-                return {
-                    success: false,
-                    message: data.message || "Failed to fetch users",
-                };
-            }
-
-            return {
-                success: true,
-                data: data.data,
-            };
-        } catch (error) {
-            console.error("Get all users error:", error);
+        if (!res.ok) {
             return {
                 success: false,
-                message: "Something went wrong",
+                message: data.message || "Failed to fetch users",
             };
         }
-    },
+
+        return {
+            success: true,
+            data: data.data,
+        };
+    } catch (error) {
+        console.error("Get all users error:", error);
+        return {
+            success: false,
+            message: "Something went wrong",
+        };
+    }
+},
 
     // Get user by ID (admin only)
     getUserById: async (userId: string) => {

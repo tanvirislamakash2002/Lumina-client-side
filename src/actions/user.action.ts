@@ -64,6 +64,9 @@ export const getAllUsers = async (params?: {
     limit?: number;
     search?: string;
     role?: string;
+    status?: string;    
+    verified?: string;  
+    sort?: string; 
 }) => {
     return await userService.getAllUsers(params);
 };

@@ -303,6 +303,7 @@ export const adminService = {
         limit?: number;
         search?: string;
         status?: string;
+        sort?: string;
     }) => {
         try {
             const cookieStore = await cookies();
@@ -312,7 +313,7 @@ export const adminService = {
             if (params?.limit) url.searchParams.set("limit", params.limit.toString());
             if (params?.search) url.searchParams.set("search", params.search);
             if (params?.status && params.status !== "all") url.searchParams.set("status", params.status);
-
+            if (params?.sort) url.searchParams.set("sort", params.sort);
             const res = await fetch(url.toString(), {
                 headers: {
                     Cookie: cookieStore.toString(),
