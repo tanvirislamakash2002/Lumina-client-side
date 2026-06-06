@@ -1,19 +1,21 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Circle, PlayCircle, CheckCircle, AlertCircle, ListTodo } from "lucide-react";
+import { ListTodo, CheckCircle, Clock, Circle, AlertCircle, TrendingUp } from "lucide-react";
 
-interface TasksStatsProps {
+interface ManagerTasksStatsProps {
     stats: {
         total: number;
         todo: number;
         inProgress: number;
         completed: number;
         overdue: number;
-    };
+    } | null;
 }
 
-export function TasksStats({ stats }: TasksStatsProps) {
+export function ManagerTasksStats({ stats }: ManagerTasksStatsProps) {
+    if (!stats) return null;
+
     const statCards = [
         {
             title: "Total Tasks",
@@ -32,7 +34,7 @@ export function TasksStats({ stats }: TasksStatsProps) {
         {
             title: "In Progress",
             value: stats.inProgress,
-            icon: PlayCircle,
+            icon: Clock,
             color: "text-blue-600",
             bgColor: "bg-blue-50 dark:bg-blue-950/30",
         },
@@ -47,13 +49,21 @@ export function TasksStats({ stats }: TasksStatsProps) {
             title: "Overdue",
             value: stats.overdue,
             icon: AlertCircle,
-            color: stats.overdue > 0 ? "text-red-600" : "text-muted-foreground",
+            color: "text-red-600",
             bgColor: "bg-red-50 dark:bg-red-950/30",
+        },
+        {
+            title: "Completion Rate",
+            value: stats.total === 0 ? 0 : Math.round((stats.completed / stats.total) * 100),
+            suffix: "%",
+            icon: TrendingUp,
+            color: "text-indigo-600",
+            bgColor: "bg-indigo-50 dark:bg-indigo-950/30",
         },
     ];
 
     return (
-        <div className="grid gap-4 md:grid-cols-5">
+        <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
             {statCards.map((stat) => {
                 const Icon = stat.icon;
                 return (
@@ -65,7 +75,9 @@ export function TasksStats({ stats }: TasksStatsProps) {
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{stat.value}</div>
+                            <div className="text-2xl font-bold">
+                                {stat.value}{stat.suffix || ""}
+                            </div>
                         </CardContent>
                     </Card>
                 );
