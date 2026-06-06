@@ -43,14 +43,8 @@ export const proxy = async (request: NextRequest) => {
         return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
-    // Redirect /dashboard based on role
-    if (pathName === "/dashboard") {
-        if (userRole === "ADMIN") {
-            return NextResponse.redirect(new URL("/admin", request.url));
-        }
-        // Project Managers and Team Members go to regular dashboard
-        return NextResponse.next();
-    }
+    // REMOVED: The redirect that sent Admin from /dashboard to /admin
+    // Now Admin users stay on /dashboard and see the @admin slot
 
     // Redirect to dashboard if already logged in and trying to access auth pages
     if ((pathName === "/login" || pathName === "/register") && isAuthenticated) {

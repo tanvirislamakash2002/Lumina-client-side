@@ -28,19 +28,17 @@ import {
     Settings,
     BarChart3,
     Activity,
-    Shield,
-    Bookmark,
-    Clock,
-    Tag,
-    Mail,
     FileText,
-    Home,
-    UserCheck
+    UserCheck,
+    Calendar,
+    PlusCircle,
+    ListTodo,
+    Clock,
+    Shield,
+    Tag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Roles } from "@/constants/roles";
-import { isActiveRoute } from "@/constants/routes";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 
@@ -56,8 +54,8 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
     user: User;
 }
 
-// Common Routes (for both PM and Team Member)
-const commonRoutes = [
+// Routes for TEAM_MEMBER (under /dashboard)
+const teamMemberRoutes = [
     {
         title: "Overview",
         items: [
@@ -65,63 +63,141 @@ const commonRoutes = [
         ],
     },
     {
-        title: "Work",
+        title: "My Work",
         items: [
-            { title: "Projects", url: "/projects", icon: FolderKanban },
-            { title: "Tasks", url: "/tasks", icon: CheckSquare },
-            { title: "My Tasks", url: "/my-tasks", icon: UserCheck },
-            { title: "Team", url: "/team", icon: Users },
+            { title: "My Tasks", url: "/dashboard/my-tasks", icon: UserCheck },
+            { title: "My Projects", url: "/dashboard/my-projects", icon: FolderKanban },
+            { title: "Upcoming Deadlines", url: "/dashboard/deadlines", icon: Calendar },
         ],
     },
-    // {
-    //     title: "Activity",
-    //     items: [
-    //         { title: "Notifications", url: "/notifications", icon: Bell },
-    //         { title: "Activity Log", url: "/activities", icon: Activity },
-    //     ],
-    // },
+    {
+        title: "Collaboration",
+        items: [
+            { title: "Team", url: "/dashboard/team", icon: Users },
+            { title: "Activities", url: "/dashboard/activities", icon: Activity },
+            { title: "Notifications", url: "/dashboard/notifications", icon: Bell },
+        ],
+    },
     {
         title: "Account",
         items: [
-            { title: "Profile", url: "/profile", icon: User },
-            { title: "Settings", url: "/settings", icon: Settings },
+            { title: "Profile", url: "/dashboard/profile", icon: User },
+            { title: "Settings", url: "/dashboard/settings", icon: Settings },
         ],
     },
 ];
 
-// Admin Routes
-const adminRoutes = [
+// Routes for PROJECT_MANAGER (under /dashboard)
+const projectManagerRoutes = [
     {
         title: "Overview",
         items: [
-            { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
-            { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
+            { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+            { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
         ],
     },
     {
         title: "Management",
         items: [
-            { title: "Users", url: "/admin/users", icon: Users },
-            { title: "Projects", url: "/admin/projects", icon: FolderKanban },
-            // { title: "Categories", url: "/admin/categories", icon: Tag },
+            { title: "Projects", url: "/dashboard/projects", icon: FolderKanban },
+            { title: "All Tasks", url: "/dashboard/tasks", icon: CheckSquare },
+            { title: "Create Project", url: "/dashboard/projects/create", icon: PlusCircle },
+            { title: "Create Task", url: "/dashboard/tasks/create", icon: ListTodo },
         ],
     },
     {
-        title: "System",
+        title: "Team",
         items: [
-            { title: "Activity Logs", url: "/admin/logs", icon: Activity },
-            { title: "Audit Trail", url: "/admin/audit", icon: FileText },
-            { title: "Settings", url: "/admin/settings", icon: Settings },
+            { title: "Team Members", url: "/dashboard/team", icon: Users },
+            { title: "Workload", url: "/dashboard/workload", icon: Clock },
+        ],
+    },
+    {
+        title: "Activity",
+        items: [
+            { title: "Activities", url: "/dashboard/activities", icon: Activity },
+            { title: "Notifications", url: "/dashboard/notifications", icon: Bell },
+        ],
+    },
+    {
+        title: "Account",
+        items: [
+            { title: "Profile", url: "/dashboard/profile", icon: User },
+            { title: "Settings", url: "/dashboard/settings", icon: Settings },
         ],
     },
 ];
+
+// Routes for ADMIN (under /dashboard)
+const adminRoutes = [
+    {
+        title: "Overview",
+        items: [
+            { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+            { title: "Analytics", url: "/dashboard/admin/analytics", icon: BarChart3 },
+        ],
+    },
+    {
+        title: "Management",
+        items: [
+            { title: "Users", url: "/dashboard/admin/users", icon: Users },
+            { title: "Projects", url: "/dashboard/admin/projects", icon: FolderKanban },
+            { title: "All Tasks", url: "/dashboard/admin/tasks", icon: CheckSquare },
+        ],
+    },
+    {
+        title: "Monitoring",
+        items: [
+            { title: "Activity Logs", url: "/dashboard/admin/logs", icon: Activity },
+            { title: "Audit Trail", url: "/dashboard/admin/audit", icon: FileText },
+            { title: "System Health", url: "/dashboard/admin/health", icon: Shield },
+        ],
+    },
+    {
+        title: "Configuration",
+        items: [
+            { title: "System Settings", url: "/dashboard/admin/settings", icon: Settings },
+            { title: "Role Management", url: "/dashboard/admin/roles", icon: Tag },
+        ],
+    },
+    {
+        title: "Account",
+        items: [
+            { title: "Profile", url: "/dashboard/profile", icon: User },
+        ],
+    },
+];
+
+// Helper function to check if route is active
+const isActiveRoute = (pathname: string, url: string) => {
+    if (url === "/dashboard") {
+        return pathname === "/dashboard";
+    }
+    if (url.startsWith("/dashboard/admin")) {
+        return pathname === url || pathname.startsWith(url + "/");
+    }
+    return pathname === url || pathname.startsWith(url + "/");
+};
 
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
 
     // Select routes based on user role
-    const routes = user.role === Roles.ADMIN ? adminRoutes : commonRoutes;
+    const getRoutes = () => {
+        switch (user.role) {
+            case "ADMIN":
+                return adminRoutes;
+            case "PROJECT_MANAGER":
+                return projectManagerRoutes;
+            case "TEAM_MEMBER":
+                return teamMemberRoutes;
+            default:
+                return teamMemberRoutes;
+        }
+    };
+
+    const routes = getRoutes();
 
     const handleLogout = async () => {
         const toastId = toast.loading("Logging out...");
