@@ -139,7 +139,7 @@ export function MemberProjectsGrid({ projects, currentUser }: MemberProjectsGrid
                                 </Link>
                             </Button>
                             <Button variant="outline" size="sm" className="flex-1 gap-2" asChild>
-                                <Link href={`/dashboard/tasks?projectId=${project.id}`}>
+                                <Link href={`/dashboard/my-tasks?projectId=${project.id}`}>
                                     <ListTodo className="h-4 w-4" />
                                     View Tasks
                                 </Link>

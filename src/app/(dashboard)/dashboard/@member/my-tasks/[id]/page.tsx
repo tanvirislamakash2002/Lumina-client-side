@@ -4,7 +4,7 @@ import { getTaskById } from "@/actions/task.action";
 import { getTaskComments } from "@/actions/comment.action";
 import { getTaskAttachments } from "@/actions/upload.action";
 import { getTaskActivities } from "@/actions/activity.action";
-import { MemberTaskDetailsClient } from "@/components/modules/tasks/member-tasks/MemberTaskDetailsClient";
+import { MemberTaskDetailsClient } from "@/components/modules/dashboard/member/my-tasks-details/MemberTaskDetailsClient";
 
 export const dynamic = "force-dynamic";
 
