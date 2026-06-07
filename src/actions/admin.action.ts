@@ -19,6 +19,8 @@ export const getAllUsers = async (params?: {
     search?: string;
     role?: string;
     status?: string;
+    verified?: string;
+    sort?: string;  
 }) => {
     return await adminService.getAllUsers(params);
 };

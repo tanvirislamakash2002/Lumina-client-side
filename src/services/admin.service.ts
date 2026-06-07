@@ -76,6 +76,8 @@ export const adminService = {
         search?: string;
         role?: string;
         status?: string;
+        verified?: string;
+        sort?: string;
     }) => {
         try {
             const cookieStore = await cookies();
@@ -86,7 +88,9 @@ export const adminService = {
             if (params?.search) url.searchParams.set("search", params.search);
             if (params?.role && params.role !== "all") url.searchParams.set("role", params.role);
             if (params?.status && params.status !== "all") url.searchParams.set("status", params.status);
-
+            if (params?.verified && params.verified !== "all") url.searchParams.set("verified", params.verified);
+            if (params?.sort) url.searchParams.set("sort", params.sort);
+            
             const res = await fetch(url.toString(), {
                 headers: {
                     Cookie: cookieStore.toString(),
