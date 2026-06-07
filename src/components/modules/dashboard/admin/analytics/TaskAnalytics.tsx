@@ -1,149 +1,154 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-    LineChart,
-    Line,
-    BarChart,
-    Bar,
-    PieChart,
-    Pie,
-    Cell,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    ResponsiveContainer,
-} from "recharts";
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell, BarChart, Bar } from "recharts";
 
 interface TaskAnalyticsProps {
-    completionStats: any;
+    platformStats: any;
+    compact?: boolean;
+    full?: boolean;
 }
 
-const COLORS = {
-    HIGH: "#ef4444",
-    MEDIUM: "#f59e0b",
-    LOW: "#10b981",
-    TODO: "#6b7280",
-    IN_PROGRESS: "#3b82f6",
-    COMPLETED: "#10b981",
-};
+const COLORS = ["#6366f1", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
 
-const renderCustomLabel = ({ name, percent }: { name?: string; percent?: number }) => {
-    if (!percent || percent === 0) return "";
-    return `${name}: ${(percent * 100).toFixed(0)}%`;
-};
+export function TaskAnalytics({ platformStats, compact, full }: TaskAnalyticsProps) {
+    if (!platformStats) return null;
 
-export function TaskAnalytics({ completionStats }: TaskAnalyticsProps) {
-    const tasksByPriority = completionStats?.completionByPriority || [
-        { priority: "HIGH", total: 0, completed: 0, rate: 0 },
-        { priority: "MEDIUM", total: 0, completed: 0, rate: 0 },
-        { priority: "LOW", total: 0, completed: 0, rate: 0 },
+    // Mock task status distribution
+    const statusDistribution = [
+        { name: "Completed", value: platformStats.completedTasks || 0, color: COLORS[1] },
+        { name: "In Progress", value: Math.floor(platformStats.totalTasks * 0.3), color: COLORS[2] },
+        { name: "To Do", value: Math.floor(platformStats.totalTasks * 0.4), color: COLORS[0] },
     ];
 
-    const priorityChartData = tasksByPriority.map((item: any) => ({
-        name: item.priority,
-        value: item.total,
-        color: COLORS[item.priority as keyof typeof COLORS],
+    // Mock priority distribution
+    const priorityDistribution = [
+        { name: "High", value: Math.floor(platformStats.totalTasks * 0.2), color: COLORS[3] },
+        { name: "Medium", value: Math.floor(platformStats.totalTasks * 0.5), color: COLORS[2] },
+        { name: "Low", value: Math.floor(platformStats.totalTasks * 0.3), color: COLORS[1] },
+    ];
+
+    // Mock tasks over time (last 30 days)
+    const tasksOverTime = Array.from({ length: 30 }, (_, i) => ({
+        date: new Date(Date.now() - (29 - i) * 86400000).toLocaleDateString(),
+        created: Math.floor(Math.random() * 50) + 10,
+        completed: Math.floor(Math.random() * 40) + 5,
     }));
 
-    const monthlyCompletion = completionStats?.monthlyCompletion || [];
-
-    // Sample task completion trend - replace with actual data
-    const taskCompletionData = [
-        { month: "Jan", created: 45, completed: 38 },
-        { month: "Feb", created: 52, completed: 42 },
-        { month: "Mar", created: 48, completed: 44 },
-        { month: "Apr", created: 60, completed: 52 },
-        { month: "May", created: 55, completed: 50 },
-        { month: "Jun", created: 68, completed: 62 },
+    // Mock tasks by project (top 5)
+    const tasksByProject = [
+        { name: "Website Redesign", tasks: 45 },
+        { name: "Mobile App", tasks: 38 },
+        { name: "Backend API", tasks: 32 },
+        { name: "Database Migration", tasks: 25 },
+        { name: "UI/UX Design", tasks: 20 },
     ];
 
     return (
-        <div className="grid gap-6 md:grid-cols-2">
-            {/* Tasks by Priority */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Tasks by Priority</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <ResponsiveContainer width="100%" height={300}>
-                        <PieChart>
-                            <Pie
-                                data={priorityChartData}
-                                cx="50%"
-                                cy="50%"
-                                labelLine={false}
-                                label={renderCustomLabel}
-                                outerRadius={80}
-                                fill="#8884d8"
-                                dataKey="value"
-                            >
-                                {priorityChartData.map((entry: any, index: number) => (
-                                    <Cell key={`cell-${index}`} fill={entry.color} />
-                                ))}
-                            </Pie>
-                            <Tooltip />
-                            <Legend />
-                        </PieChart>
-                    </ResponsiveContainer>
-                    <p className="text-center text-sm text-muted-foreground mt-4">
-                        Average completion time: {completionStats?.avgCompletionDays || 0} days
-                    </p>
-                </CardContent>
-            </Card>
-
-            {/* Monthly Completion Rate */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Monthly Completion Rate</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    {monthlyCompletion.length === 0 ? (
-                        <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-                            No data available
-                        </div>
-                    ) : (
-                        <ResponsiveContainer width="100%" height={300}>
-                            <LineChart data={monthlyCompletion}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="month" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Line
-                                    type="monotone"
-                                    dataKey="rate"
-                                    stroke="#6366f1"
-                                    strokeWidth={2}
-                                    name="Completion Rate %"
-                                />
-                            </LineChart>
-                        </ResponsiveContainer>
-                    )}
-                </CardContent>
-            </Card>
-
+        <div className="space-y-6">
             {/* Tasks Created vs Completed */}
-            <Card className="md:col-span-2">
+            <Card>
                 <CardHeader>
-                    <CardTitle>Tasks Created vs Completed</CardTitle>
+                    <CardTitle>Tasks Created vs Completed (Last 30 Days)</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <ResponsiveContainer width="100%" height={300}>
-                        <BarChart data={taskCompletionData}>
+                    <ResponsiveContainer width="100%" height={compact ? 250 : 400}>
+                        <LineChart data={tasksOverTime}>
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="month" />
+                            <XAxis dataKey="date" />
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="created" fill="#6366f1" name="Tasks Created" />
-                            <Bar dataKey="completed" fill="#10b981" name="Tasks Completed" />
-                        </BarChart>
+                            <Line type="monotone" dataKey="created" stroke="#6366f1" name="Tasks Created" />
+                            <Line type="monotone" dataKey="completed" stroke="#10b981" name="Tasks Completed" />
+                        </LineChart>
                     </ResponsiveContainer>
                 </CardContent>
             </Card>
+
+            {!compact && (
+                <div className="grid gap-6 md:grid-cols-2">
+                    {/* Tasks by Status */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Tasks by Status</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <ResponsiveContainer width="100%" height={300}>
+                                <PieChart>
+                                    <Pie
+                                        data={statusDistribution}
+                                        cx="50%"
+                                        cy="50%"
+                                        labelLine={false}
+                                        label={({ name, percent }) => {
+                                            const percentage = percent ? (percent * 100).toFixed(0) : "0";
+                                            return `${name}: ${percentage}%`;
+                                        }}
+                                        outerRadius={80}
+                                        fill="#8884d8"
+                                        dataKey="value"
+                                    >
+                                        {statusDistribution.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={entry.color} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </CardContent>
+                    </Card>
+
+                    {/* Tasks by Priority */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Tasks by Priority</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <ResponsiveContainer width="100%" height={300}>
+                                <PieChart>
+                                    <Pie
+                                        data={priorityDistribution}
+                                        cx="50%"
+                                        cy="50%"
+                                        labelLine={false}
+                                        label={({ name, percent }) => {
+                                            const percentage = percent ? (percent * 100).toFixed(0) : "0";
+                                            return `${name}: ${percentage}%`;
+                                        }}
+                                        outerRadius={80}
+                                        fill="#8884d8"
+                                        dataKey="value"
+                                    >
+                                        {priorityDistribution.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={entry.color} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </CardContent>
+                    </Card>
+
+                    {/* Tasks by Project */}
+                    <Card className="md:col-span-2">
+                        <CardHeader>
+                            <CardTitle>Top Projects by Task Count</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <ResponsiveContainer width="100%" height={300}>
+                                <BarChart data={tasksByProject} layout="vertical">
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis type="number" />
+                                    <YAxis type="category" dataKey="name" width={100} />
+                                    <Tooltip />
+                                    <Bar dataKey="tasks" fill="#6366f1" />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
         </div>
     );
 }

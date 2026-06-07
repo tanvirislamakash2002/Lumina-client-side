@@ -135,30 +135,30 @@ const adminRoutes = [
         title: "Overview",
         items: [
             { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-            { title: "Analytics", url: "/dashboard/admin/analytics", icon: BarChart3 },
+            { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
         ],
     },
     {
         title: "Management",
         items: [
-            { title: "Users", url: "/dashboard/admin/users", icon: Users },
-            { title: "Projects", url: "/dashboard/admin/projects", icon: FolderKanban },
-            { title: "All Tasks", url: "/dashboard/admin/tasks", icon: CheckSquare },
+            { title: "Users", url: "/dashboard/users", icon: Users },
+            { title: "Projects", url: "/dashboard/projects", icon: FolderKanban },
+            { title: "All Tasks", url: "/dashboard/tasks", icon: CheckSquare },
         ],
     },
     {
         title: "Monitoring",
         items: [
-            { title: "Activity Logs", url: "/dashboard/admin/logs", icon: Activity },
-            { title: "Audit Trail", url: "/dashboard/admin/audit", icon: FileText },
-            { title: "System Health", url: "/dashboard/admin/health", icon: Shield },
+            { title: "Activity Logs", url: "/dashboard/logs", icon: Activity },
+            { title: "Audit Trail", url: "/dashboard/audit", icon: FileText },
+            { title: "System Health", url: "/dashboard/health", icon: Shield },
         ],
     },
     {
         title: "Configuration",
         items: [
-            { title: "System Settings", url: "/dashboard/admin/settings", icon: Settings },
-            { title: "Role Management", url: "/dashboard/admin/roles", icon: Tag },
+            { title: "System Settings", url: "/dashboard/settings", icon: Settings },
+            { title: "Role Management", url: "/dashboard/roles", icon: Tag },
         ],
     },
     {
