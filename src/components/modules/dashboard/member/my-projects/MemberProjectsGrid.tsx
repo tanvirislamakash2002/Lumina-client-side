@@ -71,7 +71,7 @@ export function MemberProjectsGrid({ projects, currentUser }: MemberProjectsGrid
                                 <div className="space-y-1">
                                     <CardTitle className="text-xl">
                                         <Link
-                                            href={`/dashboard/projects/${project.id}`}
+                                            href={`/dashboard/my-projects/${project.id}`}
                                             className="hover:text-indigo-600 transition-colors"
                                         >
                                             {project.name}
@@ -133,7 +133,7 @@ export function MemberProjectsGrid({ projects, currentUser }: MemberProjectsGrid
 
                         <CardFooter className="flex gap-2 pt-4">
                             <Button variant="outline" size="sm" className="flex-1 gap-2" asChild>
-                                <Link href={`/dashboard/projects/${project.id}`}>
+                                <Link href={`/dashboard/my-projects/${project.id}`}>
                                     <Eye className="h-4 w-4" />
                                     View Details
                                 </Link>
