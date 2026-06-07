@@ -81,7 +81,7 @@ export function ProfileStats({ workload, projectsCount }: ProfileStatsProps) {
     ];
 
     return (
-        <div className="grid gap-4 md:grid-cols-4 lg:grid-cols-7">
+        <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
             {statCards.map((stat) => {
                 const Icon = stat.icon;
                 return (

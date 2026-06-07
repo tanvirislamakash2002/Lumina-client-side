@@ -117,15 +117,15 @@ export function ProfileTasksTab({ userId, initialTasks }: ProfileTasksTabProps) 
                     </Select>
                 </div>
 
-                {/* Tasks Table */}
+                {/* Tasks Table - ADDED responsive wrapper */}
                 <div className="overflow-x-auto">
                     <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Task Title</TableHead>
-                                <TableHead>Project</TableHead>
+                                <TableHead className="hidden sm:table-cell">Project</TableHead>  {/* Hide on mobile */}
                                 <TableHead>Status</TableHead>
-                                <TableHead>Priority</TableHead>
+                                <TableHead className="hidden md:table-cell">Priority</TableHead>  {/* Hide on tablet */}
                                 <TableHead>Due Date</TableHead>
                                 <TableHead className="w-12"></TableHead>
                             </TableRow>
@@ -135,18 +135,18 @@ export function ProfileTasksTab({ userId, initialTasks }: ProfileTasksTabProps) 
                                 const isOverdue = new Date(task.dueDate) < new Date() && task.status !== "COMPLETED";
                                 return (
                                     <TableRow key={task.id}>
-                                        <TableCell>
+                                        <TableCell className="max-w-[200px]">
                                             <Link
                                                 href={`/dashboard/tasks/${task.id}`}
-                                                className="font-medium hover:text-indigo-600 transition-colors"
+                                                className="font-medium hover:text-indigo-600 transition-colors line-clamp-2"
                                             >
                                                 {task.title}
                                             </Link>
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell className="hidden sm:table-cell">
                                             <Link
                                                 href={`/dashboard/projects/${task.project?.id}`}
-                                                className="text-sm hover:text-indigo-600 transition-colors"
+                                                className="text-sm hover:text-indigo-600 transition-colors line-clamp-1"
                                             >
                                                 {task.project?.name}
                                             </Link>
@@ -156,19 +156,19 @@ export function ProfileTasksTab({ userId, initialTasks }: ProfileTasksTabProps) 
                                                 {task.status.replace("_", " ")}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell className="hidden md:table-cell">
                                             <Badge className={priorityColors[task.priority]}>
                                                 {task.priority}
                                             </Badge>
                                         </TableCell>
                                         <TableCell>
-                                            <div className="flex items-center gap-1">
-                                                <Calendar className="h-3 w-3 text-muted-foreground" />
+                                            <div className="flex items-center gap-1 whitespace-nowrap">
+                                                <Calendar className="h-3 w-3 text-muted-foreground flex-shrink-0" />
                                                 <span className={`text-sm ${isOverdue ? "text-red-600" : ""}`}>
                                                     {getDaysUntil(task.dueDate)}
                                                 </span>
                                                 {isOverdue && (
-                                                    <AlertCircle className="h-3 w-3 text-red-500" />
+                                                    <AlertCircle className="h-3 w-3 text-red-500 flex-shrink-0" />
                                                 )}
                                             </div>
                                         </TableCell>

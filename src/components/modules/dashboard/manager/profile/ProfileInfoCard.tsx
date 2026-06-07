@@ -9,6 +9,7 @@ import { Mail, Calendar, Edit2, Save, X } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { updateProfile } from "@/actions/user.action";
+import { ProfileChangePasswordModal } from "./ProfileChangePasswordModal";
 
 interface ProfileInfoCardProps {
     user: any;
@@ -103,6 +104,11 @@ export function ProfileInfoCard({ user }: ProfileInfoCardProps) {
                             {format(new Date(user.createdAt), "MMMM dd, yyyy")}
                         </p>
                     </div>
+                </div>
+
+                {/* Change Password Button */}
+                <div className="pt-2">
+                    <ProfileChangePasswordModal onRefresh={() => {}} />
                 </div>
 
                 {/* Edit Actions */}

@@ -8,7 +8,7 @@ import { ProfileInfoCard } from "./ProfileInfoCard";
 import { ProfileTasksTab } from "./ProfileTasksTab";
 import { ProfileProjectsTab } from "./ProfileProjectsTab";
 import { ProfileActivitiesTab } from "./ProfileActivitiesTab";
-import { ProfileChangePassword } from "./ProfileChangePassword";
+import { ProfileChangePasswordModal } from "./ProfileChangePasswordModal";
 
 interface ProfileClientProps {
     user: any;
@@ -42,15 +42,13 @@ export function ProfileClient({
                 {/* Left Column - Profile Info */}
                 <div className="lg:col-span-1 space-y-6">
                     <ProfileInfoCard user={user} />
-                    <ProfileChangePassword onRefresh={handleRefresh} />
                 </div>
 
-                {/* Right Column - Stats and Tabs */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="lg:col-span-2 space-y-6 min-w-0">  {/* Add min-w-0 */}
                     <ProfileStats workload={workload} projectsCount={projects.length} />
 
-                    <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-                        <TabsList>
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 w-full min-w-0 flex flex-col">  {/* Add min-w-0 */}
+                        <TabsList className="flex flex-wrap">  {/* Allow tabs to wrap on mobile */}
                             <TabsTrigger value="tasks">
                                 My Tasks ({tasks.length})
                             </TabsTrigger>
@@ -62,27 +60,27 @@ export function ProfileClient({
                             </TabsTrigger>
                         </TabsList>
 
-                        <TabsContent value="tasks" className="space-y-4">
-                            <ProfileTasksTab
-                                userId={userId}
-                                initialTasks={tasks}
-                            />
-                        </TabsContent>
+                        <div className="w-full overflow-x-auto">  {/* Change overflow-hidden to overflow-x-auto */}
+                            <TabsContent value="tasks" className="space-y-4 m-0">
+                                <ProfileTasksTab userId={userId} initialTasks={tasks} />
+                            </TabsContent>
 
-                        <TabsContent value="projects" className="space-y-4">
-                            <ProfileProjectsTab
-                                projects={projects}
-                            />
-                        </TabsContent>
+                            <TabsContent value="projects" className="space-y-4 m-0">
+                                <ProfileProjectsTab
+                                    projects={projects}
+                                />
+                            </TabsContent>
 
-                        <TabsContent value="activities" className="space-y-4">
-                            <ProfileActivitiesTab
-                                activities={activities}
-                            />
-                        </TabsContent>
+                            <TabsContent value="activities" className="space-y-4 m-0">
+                                <ProfileActivitiesTab
+                                    activities={activities}
+                                />
+                            </TabsContent>
+                        </div>
                     </Tabs>
                 </div>
             </div>
         </div>
     );
 }
+

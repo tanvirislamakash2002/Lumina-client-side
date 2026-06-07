@@ -93,7 +93,7 @@ export function ProfileHeader({ user, onRefresh }: ProfileHeaderProps) {
 
     return (
         <div className="flex flex-col md:flex-row md:items-center gap-6">
-            <div className="relative">
+            <div className="relative h-24 w-24">
                 <Avatar className="h-24 w-24">
                     <AvatarImage src={user.image || undefined} />
                     <AvatarFallback className="bg-indigo-100 text-indigo-700 text-2xl">
@@ -121,7 +121,7 @@ export function ProfileHeader({ user, onRefresh }: ProfileHeaderProps) {
                 {user.image && (
                     <button
                         onClick={handleRemoveAvatar}
-                        className="absolute -top-1 -right-1 p-1 bg-red-500 rounded-full text-white text-xs hover:bg-red-600 transition-colors"
+                        className="absolute -top-1 -right-1 px-2 py-1 bg-red-500 rounded-full text-white text-xs hover:bg-red-600 transition-colors"
                         disabled={isUploading}
                     >
                         ×
