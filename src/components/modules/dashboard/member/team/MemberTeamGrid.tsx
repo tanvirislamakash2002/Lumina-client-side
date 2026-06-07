@@ -50,36 +50,38 @@ export function MemberTeamGrid({ members }: MemberTeamGridProps) {
     return (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {members.map((member) => (
-                <Card key={member.id} className="overflow-hidden hover:shadow-md transition-shadow">
-                    <CardContent className="p-4">
-                        <div className="flex items-center gap-3">
-                            <Avatar className="h-12 w-12">
-                                <AvatarImage src={member.image || undefined} />
-                                <AvatarFallback className="bg-indigo-100 text-indigo-700">
-                                    {getInitials(member.name)}
-                                </AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1 min-w-0">
-                                <p className="font-medium truncate">{member.name}</p>
-                                <div className="flex items-center gap-1 mt-0.5">
-                                    <Mail className="h-3 w-3 text-muted-foreground" />
-                                    <p className="text-xs text-muted-foreground truncate">
-                                        {member.email}
-                                    </p>
-                                </div>
-                                <div className="mt-2">
-                                    <Badge className={roleColors[member.role]}>
-                                        {member.role === "ADMIN" 
-                                            ? "Admin" 
-                                            : member.role === "PROJECT_MANAGER" 
-                                                ? "Project Manager" 
-                                                : "Team Member"}
-                                    </Badge>
+                <Link key={member.id} href={`/dashboard/team/${member.id}`} className="block">
+                    <Card className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
+                        <CardContent className="p-4">
+                            <div className="flex items-center gap-3">
+                                <Avatar className="h-12 w-12">
+                                    <AvatarImage src={member.image || undefined} />
+                                    <AvatarFallback className="bg-indigo-100 text-indigo-700">
+                                        {getInitials(member.name)}
+                                    </AvatarFallback>
+                                </Avatar>
+                                <div className="flex-1 min-w-0">
+                                    <p className="font-medium truncate">{member.name}</p>
+                                    <div className="flex items-center gap-1 mt-0.5">
+                                        <Mail className="h-3 w-3 text-muted-foreground" />
+                                        <p className="text-xs text-muted-foreground truncate">
+                                            {member.email}
+                                        </p>
+                                    </div>
+                                    <div className="mt-2">
+                                        <Badge className={roleColors[member.role]}>
+                                            {member.role === "ADMIN"
+                                                ? "Admin"
+                                                : member.role === "PROJECT_MANAGER"
+                                                    ? "Project Manager"
+                                                    : "Team Member"}
+                                        </Badge>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </CardContent>
-                </Card>
+                        </CardContent>
+                    </Card>
+                </Link>
             ))}
         </div>
     );
