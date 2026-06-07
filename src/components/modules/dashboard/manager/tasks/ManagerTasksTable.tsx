@@ -221,7 +221,10 @@ export function ManagerTasksTable({
                                         </TableCell>
                                         <TableCell>
                                             {task.assignedTo ? (
-                                                <div className="flex items-center gap-2">
+                                                <Link
+                                                    href={`/dashboard/team/${task.assignedTo.id}`}
+                                                    className="flex items-center gap-2 hover:text-indigo-600 transition-colors"
+                                                >
                                                     <Avatar className="h-6 w-6">
                                                         <AvatarImage src={task.assignedTo.image || undefined} />
                                                         <AvatarFallback className="text-xs">
@@ -229,7 +232,7 @@ export function ManagerTasksTable({
                                                         </AvatarFallback>
                                                     </Avatar>
                                                     <span className="text-sm">{task.assignedTo.name}</span>
-                                                </div>
+                                                </Link>
                                             ) : (
                                                 <span className="text-sm text-muted-foreground">Unassigned</span>
                                             )}

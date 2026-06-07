@@ -26,6 +26,7 @@ import {
 import { Plus, Search, UserPlus, Trash2, Mail, AlertCircle } from "lucide-react";
 import { addMember, removeMember, getAvailableMembers } from "@/actions/project-member.action";
 import { toast } from "sonner";
+import Link from "next/link";
 
 interface ProjectMembersTabProps {
     projectId: string;
@@ -228,31 +229,18 @@ export function ProjectMembersTab({
                                         </AvatarFallback>
                                     </Avatar>
                                     <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-2 flex-wrap">
-                                            <p className="font-medium">{member.name}</p>
-                                            <Badge className={roleColors[member.role]}>
-                                                {member.role.replace("_", " ")}
-                                            </Badge>
-                                        </div>
+                                        <Link
+                                            href={`/dashboard/team/${member.id}`}
+                                            className="font-medium hover:text-indigo-600 transition-colors"
+                                        >
+                                            {member.name}
+                                        </Link>
                                         <div className="flex items-center gap-2 mt-1">
                                             <Mail className="h-3 w-3 text-muted-foreground" />
                                             <span className="text-xs text-muted-foreground">
                                                 {member.email}
                                             </span>
                                         </div>
-                                        {member.taskCount !== undefined && (
-                                            <div className="mt-2 space-y-1">
-                                                <div className="flex justify-between text-xs">
-                                                    <span className="text-muted-foreground">Task Progress</span>
-                                                    <span>{member.completionRate || 0}%</span>
-                                                </div>
-                                                <Progress value={member.completionRate || 0} className="h-1.5" />
-                                                <div className="flex justify-between text-xs text-muted-foreground">
-                                                    <span>{member.completedTasks || 0} completed</span>
-                                                    <span>{member.taskCount || 0} total tasks</span>
-                                                </div>
-                                            </div>
-                                        )}
                                     </div>
                                 </div>
                                 {canEdit && (

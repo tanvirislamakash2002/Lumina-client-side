@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TeamMemberHeader } from "./TeamMemberHeader";
 import { TeamMemberStats } from "./TeamMemberStats";
@@ -34,6 +34,8 @@ export function TeamMemberDetailsClient({
     userId,
 }: TeamMemberDetailsClientProps) {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const tabParam = searchParams.get("tab");
     const [activeTab, setActiveTab] = useState("tasks");
     const [refreshKey, setRefreshKey] = useState(0);
 
@@ -41,6 +43,12 @@ export function TeamMemberDetailsClient({
         setRefreshKey((prev) => prev + 1);
         router.refresh();
     };
+
+    useEffect(() => {
+        if (tabParam && ["tasks", "projects", "activities", "settings"].includes(tabParam)) {
+            setActiveTab(tabParam);
+        }
+    }, [tabParam]);
 
     return (
         <div className="space-y-6" key={refreshKey}>
@@ -53,7 +61,7 @@ export function TeamMemberDetailsClient({
 
             <TeamMemberStats stats={stats} projectsCount={projects.length} />
 
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 flex flex-col">
                 <TabsList>
                     <TabsTrigger value="tasks">
                         Tasks ({stats?.totalTasks || 0})
@@ -68,37 +76,38 @@ export function TeamMemberDetailsClient({
                         <TabsTrigger value="settings">Settings</TabsTrigger>
                     )}
                 </TabsList>
-
-                <TabsContent value="tasks" className="space-y-4">
-                    <TeamMemberTasksTab
-                        userId={userId}
-                        initialTasks={tasks}
-                        userName={user.name}
-                    />
-                </TabsContent>
-
-                <TabsContent value="projects" className="space-y-4">
-                    <TeamMemberProjectsTab
-                        projects={projects}
-                    />
-                </TabsContent>
-
-                <TabsContent value="activities" className="space-y-4">
-                    <TeamMemberActivitiesTab
-                        activities={activities}
-                    />
-                </TabsContent>
-
-                {(isAdmin || isOwnProfile) && (
-                    <TabsContent value="settings" className="space-y-4">
-                        <TeamMemberAdminActions
-                            user={user}
-                            isAdmin={isAdmin}
-                            isOwnProfile={isOwnProfile}
-                            onRefresh={handleRefresh}
+                <>
+                    <TabsContent value="tasks" className="space-y-4">
+                        <TeamMemberTasksTab
+                            userId={userId}
+                            initialTasks={tasks}
+                            userName={user.name}
                         />
                     </TabsContent>
-                )}
+
+                    <TabsContent value="projects" className="space-y-4">
+                        <TeamMemberProjectsTab
+                            projects={projects}
+                        />
+                    </TabsContent>
+
+                    <TabsContent value="activities" className="space-y-4">
+                        <TeamMemberActivitiesTab
+                            activities={activities}
+                        />
+                    </TabsContent>
+
+                    {(isAdmin || isOwnProfile) && (
+                        <TabsContent value="settings" className="space-y-4">
+                            <TeamMemberAdminActions
+                                user={user}
+                                isAdmin={isAdmin}
+                                isOwnProfile={isOwnProfile}
+                                onRefresh={handleRefresh}
+                            />
+                        </TabsContent>
+                    )}
+                </>
             </Tabs>
         </div>
     );

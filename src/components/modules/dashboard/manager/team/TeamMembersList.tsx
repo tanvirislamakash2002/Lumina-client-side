@@ -148,8 +148,11 @@ export function TeamMembersList({ users, isAdmin, onRefresh }: TeamMembersListPr
                         <Card key={user.id} className="overflow-hidden">
                             <CardContent className="p-4">
                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                    {/* User Info */}
-                                    <div className="flex items-center gap-4 flex-1">
+                                    {/* User Info - Make clickable to navigate to team member details */}
+                                    <Link 
+                                        href={`/dashboard/team/${user.id}`} 
+                                        className="flex items-center gap-4 flex-1 hover:bg-muted/30 rounded-lg transition-colors cursor-pointer"
+                                    >
                                         <Avatar className="h-12 w-12">
                                             <AvatarImage src={user.image || undefined} />
                                             <AvatarFallback className="bg-indigo-100 text-indigo-700">
@@ -158,7 +161,9 @@ export function TeamMembersList({ users, isAdmin, onRefresh }: TeamMembersListPr
                                         </Avatar>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 flex-wrap">
-                                                <h3 className="font-semibold">{user.name}</h3>
+                                                <h3 className="font-semibold hover:text-indigo-600 transition-colors">
+                                                    {user.name}
+                                                </h3>
                                                 <Badge className={roleColors[user.role]}>
                                                     {user.role.replace("_", " ")}
                                                 </Badge>
@@ -185,7 +190,7 @@ export function TeamMembersList({ users, isAdmin, onRefresh }: TeamMembersListPr
                                                 </span>
                                             </div>
                                         </div>
-                                    </div>
+                                    </Link>
 
                                     {/* Workload Progress */}
                                     <div className="min-w-[200px]">
@@ -201,7 +206,7 @@ export function TeamMembersList({ users, isAdmin, onRefresh }: TeamMembersListPr
                                     {/* Actions */}
                                     <div className="flex items-center gap-2">
                                         <Button variant="outline" size="sm" asChild>
-                                            <Link href={`/dashboard/tasks?assignedTo=${user.id}`}>
+                                            <Link href={`/dashboard/team/${user.id}?tab=tasks`}>
                                                 View Tasks
                                             </Link>
                                         </Button>
