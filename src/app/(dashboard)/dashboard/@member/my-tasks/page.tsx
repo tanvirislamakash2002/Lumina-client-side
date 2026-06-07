@@ -2,7 +2,7 @@ import { getSession } from "@/actions/auth.action";
 import { redirect } from "next/navigation";
 import { getMyTasks } from "@/actions/task.action";
 import { getProjects } from "@/actions/project.action";
-import { MemberMyTasksClient } from "@/components/modules/tasks/member-tasks/MemberMyTasksClient";
+import { MemberMyTasksClient } from "@/components/modules/dashboard/member/my-tasks/MemberMyTasksClient";
 
 export const dynamic = "force-dynamic";
 
