@@ -101,6 +101,7 @@ const projectManagerRoutes = [
         items: [
             { title: "Projects", url: "/dashboard/projects", icon: FolderKanban },
             { title: "All Tasks", url: "/dashboard/tasks", icon: CheckSquare },
+            { title: "My Tasks", url: "/dashboard/my-tasks", icon: UserCheck },
             { title: "Create Project", url: "/dashboard/projects/create", icon: PlusCircle },
             { title: "Create Task", url: "/dashboard/tasks/create", icon: ListTodo },
         ],

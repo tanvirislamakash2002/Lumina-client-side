@@ -67,46 +67,50 @@ export function TaskDetailsClient({
                 <div className="lg:col-span-2 space-y-6">
                     <TaskInfoCard task={task} />
 
-                    <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-                        <TabsList>
-                            <TabsTrigger value="comments">
-                                Comments ({comments.length})
-                            </TabsTrigger>
-                            <TabsTrigger value="attachments">
-                                Attachments ({attachments.length})
-                            </TabsTrigger>
-                            <TabsTrigger value="activities">
-                                Activities ({activities.length})
-                            </TabsTrigger>
-                        </TabsList>
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 flex flex-col">
+                        <>
+                            <TabsList>
+                                <TabsTrigger value="comments">
+                                    Comments ({comments.length})
+                                </TabsTrigger>
+                                <TabsTrigger value="attachments">
+                                    Attachments ({attachments.length})
+                                </TabsTrigger>
+                                <TabsTrigger value="activities">
+                                    Activities ({activities.length})
+                                </TabsTrigger>
+                            </TabsList>
+                        </>
 
-                        <TabsContent value="comments" className="space-y-4">
-                            <TaskComments
-                                taskId={taskId}
-                                initialComments={comments}
-                                currentUserId={currentUserId}
-                                userRole={userRole}
-                                onCommentUpdate={handleRefresh}
-                            />
-                        </TabsContent>
+                        <>
+                            <TabsContent value="comments" className="space-y-4">
+                                <TaskComments
+                                    taskId={taskId}
+                                    initialComments={comments}
+                                    currentUserId={currentUserId}
+                                    userRole={userRole}
+                                    onCommentUpdate={handleRefresh}
+                                />
+                            </TabsContent>
 
-                        <TabsContent value="attachments" className="space-y-4">
-                            <TaskAttachments
-                                taskId={taskId}
-                                initialAttachments={attachments}
-                                canEdit={canEdit}
-                                currentUserId={currentUserId}
-                                userRole={userRole}
-                                onAttachmentUpdate={handleRefresh}
-                            />
-                        </TabsContent>
+                            <TabsContent value="attachments" className="space-y-4">
+                                <TaskAttachments
+                                    taskId={taskId}
+                                    initialAttachments={attachments}
+                                    canEdit={canEdit}
+                                    currentUserId={currentUserId}
+                                    userRole={userRole}
+                                    onAttachmentUpdate={handleRefresh}
+                                />
+                            </TabsContent>
 
-                        <TabsContent value="activities" className="space-y-4">
-                            <TaskActivities
-                                taskId={taskId}
-                                initialActivities={activities}
-                            />
-                        </TabsContent>
+                            <TabsContent value="activities" className="space-y-4">
+                                <TaskActivities
+                                    taskId={taskId}
+                                    initialActivities={activities}
+                                />
+                            </TabsContent>
+                        </>
                     </Tabs>
                 </div>
 
