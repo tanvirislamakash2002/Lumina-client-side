@@ -150,7 +150,7 @@ export function AdminProjectsTable({ projects, onRefresh }: AdminProjectsTablePr
                                             </td>
                                             <td className="p-4">
                                                 <Link
-                                                    href={`/dashboard/admin/projects/${project.id}`}
+                                                    href={`/dashboard/projects/${project.id}`}
                                                     className="font-medium hover:text-indigo-600 transition-colors"
                                                 >
                                                     {project.name}
@@ -208,7 +208,7 @@ export function AdminProjectsTable({ projects, onRefresh }: AdminProjectsTablePr
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
                                                         <DropdownMenuItem asChild>
-                                                            <Link href={`/dashboard/admin/projects/${project.id}`}>
+                                                            <Link href={`/dashboard/projects/${project.id}`}>
                                                                 <Eye className="h-4 w-4 mr-2" />
                                                                 View Details
                                                             </Link>

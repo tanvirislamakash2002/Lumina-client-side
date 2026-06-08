@@ -35,13 +35,13 @@ export function AdminProjectsClient({
         if (status && status !== "all") params.set("status", status);
         if (sort) params.set("sort", sort);
         params.set("page", "1");
-        router.push(`/dashboard/admin/projects?${params.toString()}`);
+        router.push(`/dashboard/projects?${params.toString()}`);
     };
 
     const handlePageChange = (page: number) => {
         const params = new URLSearchParams(window.location.search);
         params.set("page", page.toString());
-        router.push(`/dashboard/admin/projects?${params.toString()}`);
+        router.push(`/dashboard/projects?${params.toString()}`);
     };
 
     const handleRefresh = () => {
