@@ -1,56 +1,55 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Shield, Briefcase, UserCircle, Clock } from "lucide-react";
+import { Users, Shield, Briefcase, UserCircle, OctagonAlert } from "lucide-react";
 
 interface AdminRolesStatsProps {
     stats: {
-        totalUsers: number;
-        adminCount: number;
-        projectManagerCount: number;
-        teamMemberCount: number;
+        total: number;
+        admin: number;
+        projectManager: number;
+        teamMember: number;
+        suspended: number;
     } | null;
 }
 
 export function AdminRolesStats({ stats }: AdminRolesStatsProps) {
     if (!stats) return null;
 
-    const recentlyChanged = 12; // Mock - would come from API
-
     const statCards = [
         {
             title: "Total Users",
-            value: stats.totalUsers,
+            value: stats.total,
             icon: Users,
             color: "text-indigo-600",
             bgColor: "bg-indigo-50 dark:bg-indigo-950/30",
         },
         {
             title: "Administrators",
-            value: stats.adminCount,
+            value: stats.admin,
             icon: Shield,
             color: "text-purple-600",
             bgColor: "bg-purple-50 dark:bg-purple-950/30",
-            warning: stats.adminCount === 1,
+            warning: stats.admin === 1,
         },
         {
             title: "Project Managers",
-            value: stats.projectManagerCount,
+            value: stats.projectManager,
             icon: Briefcase,
             color: "text-blue-600",
             bgColor: "bg-blue-50 dark:bg-blue-950/30",
         },
         {
             title: "Team Members",
-            value: stats.teamMemberCount,
+            value: stats.teamMember,
             icon: UserCircle,
             color: "text-emerald-600",
             bgColor: "bg-emerald-50 dark:bg-emerald-950/30",
         },
         {
-            title: "Recently Changed",
-            value: recentlyChanged,
-            icon: Clock,
+            title: "Suspended",
+            value: stats.suspended,
+            icon: OctagonAlert,
             color: "text-amber-600",
             bgColor: "bg-amber-50 dark:bg-amber-950/30",
         },

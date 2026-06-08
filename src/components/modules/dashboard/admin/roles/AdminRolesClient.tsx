@@ -71,7 +71,7 @@ export function AdminRolesClient({
     // Check if multiple admins exist
     const adminCount = initialStats?.adminCount || 0;
     const showAdminWarning = adminCount === 1;
-console.log(initialStats,'------');
+
     return (
         <div className="space-y-6">
             <AdminRolesHeader onRefresh={handleRefresh} />
