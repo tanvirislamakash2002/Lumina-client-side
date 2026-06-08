@@ -59,18 +59,19 @@ const getInitials = (name: string) => {
 };
 
 export function ProfileActivitiesTab({ activities }: ProfileActivitiesTabProps) {
+    const safeActivities = Array.isArray(activities) ? activities : [];
     const [search, setSearch] = useState("");
     const [actionFilter, setActionFilter] = useState("all");
 
-    const filteredActivities = activities.filter((activity) => {
+    const filteredActivities = safeActivities.filter((activity) => {
         const matchesSearch = activity.message.toLowerCase().includes(search.toLowerCase());
         const matchesAction = actionFilter === "all" || activity.action === actionFilter;
         return matchesSearch && matchesAction;
     });
 
-    const actionTypes = [...new Set(activities.map((a) => a.action))];
+    const actionTypes = [...new Set(safeActivities.map((a) => a.action))];
 
-    if (activities.length === 0) {
+    if (safeActivities.length === 0) {
         return (
             <Card>
                 <CardHeader>
@@ -131,7 +132,7 @@ export function ProfileActivitiesTab({ activities }: ProfileActivitiesTabProps) 
                                 </Avatar>
                                 <div className="flex-1 min-w-0">
                                     <p className="text-sm">{activity.message}</p>
-                                    <div className="flex items-center gap-2 mt-1">
+                                    <div className="flex items-center gap-2 mt-1 flex-wrap">
                                         <span className="text-xs text-muted-foreground">
                                             {getRelativeTime(activity.createdAt)}
                                         </span>
@@ -159,7 +160,7 @@ export function ProfileActivitiesTab({ activities }: ProfileActivitiesTabProps) 
                                         )}
                                     </div>
                                 </div>
-                                <div className="p-1.5 rounded-full bg-muted">
+                                <div className="p-1.5 rounded-full bg-muted self-start">
                                     <Icon className="h-3 w-3 text-muted-foreground" />
                                 </div>
                             </div>

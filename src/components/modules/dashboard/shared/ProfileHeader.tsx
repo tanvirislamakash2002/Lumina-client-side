@@ -38,13 +38,11 @@ export function ProfileHeader({ user, onRefresh }: ProfileHeaderProps) {
         const file = event.target.files?.[0];
         if (!file) return;
 
-        // Validate file type
         if (!file.type.startsWith("image/")) {
             toast.error("Please upload an image file");
             return;
         }
 
-        // Validate file size (2MB)
         if (file.size > 2 * 1024 * 1024) {
             toast.error("File size must be less than 2MB");
             return;
@@ -93,7 +91,7 @@ export function ProfileHeader({ user, onRefresh }: ProfileHeaderProps) {
 
     return (
         <div className="flex flex-col md:flex-row md:items-center gap-6">
-            <div className="relative h-24 w-24">
+            <div className="relative">
                 <Avatar className="h-24 w-24">
                     <AvatarImage src={user.image || undefined} />
                     <AvatarFallback className="bg-indigo-100 text-indigo-700 text-2xl">
@@ -133,7 +131,11 @@ export function ProfileHeader({ user, onRefresh }: ProfileHeaderProps) {
                 <div className="flex items-center gap-2 flex-wrap">
                     <h1 className="text-2xl font-bold">{user.name}</h1>
                     <Badge className={roleColors[user.role]}>
-                        {user.role.replace("_", " ")}
+                        {user.role === "ADMIN" 
+                            ? "Admin" 
+                            : user.role === "PROJECT_MANAGER" 
+                                ? "Project Manager" 
+                                : "Team Member"}
                     </Badge>
                     <Badge variant={user.accountStatus === "ACTIVE" ? "default" : "destructive"}>
                         {user.accountStatus}

@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ListTodo, CheckCircle, Clock, Circle, AlertCircle, TrendingUp, FolderKanban } from "lucide-react";
 
-interface MemberProfileStatsProps {
+interface ProfileStatsProps {
     workload: {
         total: number;
         completed: number;
@@ -24,7 +24,7 @@ interface StatCard {
     suffix?: string;
 }
 
-export function MemberProfileStats({ workload, projectsCount }: MemberProfileStatsProps) {
+export function ProfileStats({ workload, projectsCount }: ProfileStatsProps) {
     if (!workload) return null;
 
     const statCards: StatCard[] = [
@@ -81,7 +81,7 @@ export function MemberProfileStats({ workload, projectsCount }: MemberProfileSta
     ];
 
     return (
-        <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
+        <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
             {statCards.map((stat) => {
                 const Icon = stat.icon;
                 return (

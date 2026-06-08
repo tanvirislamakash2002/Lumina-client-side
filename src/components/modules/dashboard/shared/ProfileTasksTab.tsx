@@ -21,7 +21,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Calendar, Eye, Search, AlertCircle } from "lucide-react";
+import { Calendar, Eye, Search, AlertCircle, Loader2, Circle, PlayCircle, CheckCircle } from "lucide-react";
+import { updateTaskStatus } from "@/actions/task.action";
+import { toast } from "sonner";
 
 interface ProfileTasksTabProps {
     userId: string;
@@ -53,6 +55,7 @@ export function ProfileTasksTab({ userId, initialTasks }: ProfileTasksTabProps) 
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [priorityFilter, setPriorityFilter] = useState("all");
+    const [updatingTaskId, setUpdatingTaskId] = useState<string | null>(null);
 
     const filteredTasks = tasks.filter((task) => {
         const matchesSearch = task.title.toLowerCase().includes(search.toLowerCase());
@@ -60,6 +63,25 @@ export function ProfileTasksTab({ userId, initialTasks }: ProfileTasksTabProps) 
         const matchesPriority = priorityFilter === "all" || task.priority === priorityFilter;
         return matchesSearch && matchesStatus && matchesPriority;
     });
+
+    const handleStatusChange = async (taskId: string, projectId: string, newStatus: string) => {
+        setUpdatingTaskId(taskId);
+        try {
+            const result = await updateTaskStatus(taskId, newStatus, projectId);
+            if (result.success) {
+                toast.success(`Task status updated to ${newStatus.replace("_", " ")}`);
+                setTasks(prev => prev.map(t => 
+                    t.id === taskId ? { ...t, status: newStatus } : t
+                ));
+            } else {
+                toast.error(result.message || "Failed to update task status");
+            }
+        } catch (error) {
+            toast.error("Something went wrong");
+        } finally {
+            setUpdatingTaskId(null);
+        }
+    };
 
     if (tasks.length === 0) {
         return (
@@ -117,15 +139,15 @@ export function ProfileTasksTab({ userId, initialTasks }: ProfileTasksTabProps) 
                     </Select>
                 </div>
 
-                {/* Tasks Table - ADDED responsive wrapper */}
+                {/* Tasks Table */}
                 <div className="overflow-x-auto">
                     <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Task Title</TableHead>
-                                <TableHead className="hidden sm:table-cell">Project</TableHead>  {/* Hide on mobile */}
+                                <TableHead className="hidden sm:table-cell">Project</TableHead>
                                 <TableHead>Status</TableHead>
-                                <TableHead className="hidden md:table-cell">Priority</TableHead>  {/* Hide on tablet */}
+                                <TableHead className="hidden md:table-cell">Priority</TableHead>
                                 <TableHead>Due Date</TableHead>
                                 <TableHead className="w-12"></TableHead>
                             </TableRow>
@@ -152,9 +174,39 @@ export function ProfileTasksTab({ userId, initialTasks }: ProfileTasksTabProps) 
                                             </Link>
                                         </TableCell>
                                         <TableCell>
-                                            <Badge className={statusColors[task.status]}>
-                                                {task.status.replace("_", " ")}
-                                            </Badge>
+                                            <Select
+                                                value={task.status}
+                                                onValueChange={(value) => handleStatusChange(task.id, task.project?.id, value)}
+                                                disabled={updatingTaskId === task.id}
+                                            >
+                                                <SelectTrigger className="w-28 h-8">
+                                                    {updatingTaskId === task.id ? (
+                                                        <Loader2 className="h-3 w-3 animate-spin" />
+                                                    ) : (
+                                                        <SelectValue />
+                                                    )}
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="TODO">
+                                                        <div className="flex items-center gap-2">
+                                                            <Circle className="h-3 w-3" />
+                                                            To Do
+                                                        </div>
+                                                    </SelectItem>
+                                                    <SelectItem value="IN_PROGRESS">
+                                                        <div className="flex items-center gap-2">
+                                                            <PlayCircle className="h-3 w-3" />
+                                                            In Progress
+                                                        </div>
+                                                    </SelectItem>
+                                                    <SelectItem value="COMPLETED">
+                                                        <div className="flex items-center gap-2">
+                                                            <CheckCircle className="h-3 w-3" />
+                                                            Completed
+                                                        </div>
+                                                    </SelectItem>
+                                                </SelectContent>
+                                            </Select>
                                         </TableCell>
                                         <TableCell className="hidden md:table-cell">
                                             <Badge className={priorityColors[task.priority]}>

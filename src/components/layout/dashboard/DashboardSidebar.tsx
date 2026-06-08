@@ -67,7 +67,7 @@ const teamMemberRoutes = [
         items: [
             { title: "My Tasks", url: "/dashboard/my-tasks", icon: UserCheck },
             { title: "My Projects", url: "/dashboard/my-projects", icon: FolderKanban },
-            { title: "Upcoming Deadlines", url: "/dashboard/deadlines", icon: Calendar },
+            // { title: "Upcoming Deadlines", url: "/dashboard/deadlines", icon: Calendar },
         ],
     },
     {
@@ -75,7 +75,7 @@ const teamMemberRoutes = [
         items: [
             { title: "Team", url: "/dashboard/team", icon: Users },
             { title: "Activities", url: "/dashboard/activities", icon: Activity },
-            { title: "Notifications", url: "/dashboard/notifications", icon: Bell },
+            // { title: "Notifications", url: "/dashboard/notifications", icon: Bell },
         ],
     },
     {
@@ -110,14 +110,14 @@ const projectManagerRoutes = [
         title: "Team",
         items: [
             { title: "Team Members", url: "/dashboard/team", icon: Users },
-            { title: "Workload", url: "/dashboard/workload", icon: Clock },
+            // { title: "Workload", url: "/dashboard/workload", icon: Clock },
         ],
     },
     {
         title: "Activity",
         items: [
             { title: "Activities", url: "/dashboard/activities", icon: Activity },
-            { title: "Notifications", url: "/dashboard/notifications", icon: Bell },
+            // { title: "Notifications", url: "/dashboard/notifications", icon: Bell },
         ],
     },
     {
@@ -151,7 +151,7 @@ const adminRoutes = [
         items: [
             { title: "Activity Logs", url: "/dashboard/logs", icon: Activity },
             { title: "Audit Trail", url: "/dashboard/audit", icon: FileText },
-            { title: "System Health", url: "/dashboard/health", icon: Shield },
+            // { title: "System Health", url: "/dashboard/health", icon: Shield },
         ],
     },
     {

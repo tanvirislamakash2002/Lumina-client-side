@@ -5,18 +5,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, Calendar, Edit2, Save, X, Key } from "lucide-react";
+import { Mail, Calendar, Edit2, Save, X } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { updateProfile } from "@/actions/user.action";
-import { MemberChangePasswordModal } from "./MemberChangePasswordModal";
+import { ProfileChangePasswordModal } from "./ProfileChangePasswordModal";
 
-interface MemberProfileInfoCardProps {
+interface ProfileInfoCardProps {
     user: any;
     onRefresh: () => void;
 }
 
-export function MemberProfileInfoCard({ user, onRefresh }: MemberProfileInfoCardProps) {
+export function ProfileInfoCard({ user, onRefresh }: ProfileInfoCardProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState(user.name);
     const [isLoading, setIsLoading] = useState(false);
@@ -94,7 +94,13 @@ export function MemberProfileInfoCard({ user, onRefresh }: MemberProfileInfoCard
                 {/* Role */}
                 <div className="space-y-2">
                     <Label>Role</Label>
-                    <p className="text-sm capitalize">{user.role.replace("_", " ").toLowerCase()}</p>
+                    <p className="text-sm capitalize">
+                        {user.role === "ADMIN" 
+                            ? "Admin" 
+                            : user.role === "PROJECT_MANAGER" 
+                                ? "Project Manager" 
+                                : "Team Member"}
+                    </p>
                 </div>
 
                 {/* Member Since */}
@@ -110,7 +116,7 @@ export function MemberProfileInfoCard({ user, onRefresh }: MemberProfileInfoCard
 
                 {/* Change Password Button */}
                 <div className="pt-2">
-                    <MemberChangePasswordModal onRefresh={onRefresh} />
+                    <ProfileChangePasswordModal onRefresh={onRefresh} />
                 </div>
 
                 {/* Edit Actions */}

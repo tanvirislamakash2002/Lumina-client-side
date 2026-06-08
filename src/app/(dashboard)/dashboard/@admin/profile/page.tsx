@@ -31,7 +31,20 @@ export default async function ProfilePage() {
     const workload = workloadResult.success ? workloadResult.data : null;
     const tasks = tasksResult.success ? tasksResult.data?.tasks || [] : [];
     const projects = projectsResult.success ? projectsResult.data?.projects || [] : [];
-    const activities = activitiesResult.success ? activitiesResult.data || [] : [];
+    
+    // ✅ FIX: Extract the activities array from the response
+    // The response structure is: { success: true, data: { user, activities, pagination, summary } }
+    let activities: any[] = [];
+    if (activitiesResult.success && activitiesResult.data) {
+        // Check if data has an activities property (array)
+        if (Array.isArray(activitiesResult.data.activities)) {
+            activities = activitiesResult.data.activities;
+        }
+        // Fallback: if data itself is an array
+        else if (Array.isArray(activitiesResult.data)) {
+            activities = activitiesResult.data;
+        }
+    }
 
     if (!user) {
         redirect("/dashboard");

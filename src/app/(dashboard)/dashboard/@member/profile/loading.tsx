@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export default function MemberProfileLoading() {
+export default function ProfileLoading() {
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -19,8 +19,8 @@ export default function MemberProfileLoading() {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
-                {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
+                {[1, 2, 3, 4, 5, 6, 7].map((i) => (
                     <Card key={i}>
                         <CardHeader className="pb-2">
                             <Skeleton className="h-4 w-20" />

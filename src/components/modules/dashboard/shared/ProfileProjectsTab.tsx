@@ -56,12 +56,12 @@ export function ProfileProjectsTab({ projects }: ProfileProjectsTabProps) {
                             className="block"
                         >
                             <div className="p-4 rounded-lg border hover:bg-muted/30 transition-colors">
-                                <div className="flex items-start justify-between mb-2">
+                                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-2 gap-2">
                                     <div>
                                         <h3 className="font-semibold hover:text-indigo-600 transition-colors">
                                             {project.name}
                                         </h3>
-                                        <div className="flex items-center gap-2 mt-1">
+                                        <div className="flex items-center gap-2 mt-1 flex-wrap">
                                             <Badge className={statusColors[project.status]}>
                                                 {project.status}
                                             </Badge>
@@ -70,11 +70,9 @@ export function ProfileProjectsTab({ projects }: ProfileProjectsTabProps) {
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="text-right">
-                                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                            <Calendar className="h-3 w-3" />
-                                            <span>{getDaysUntilDeadline(project.deadline)}</span>
-                                        </div>
+                                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                        <Calendar className="h-3 w-3" />
+                                        <span>{getDaysUntilDeadline(project.deadline)}</span>
                                     </div>
                                 </div>
 
@@ -90,7 +88,7 @@ export function ProfileProjectsTab({ projects }: ProfileProjectsTabProps) {
                                         <span>{progress}%</span>
                                     </div>
                                     <Progress value={progress} className="h-2" />
-                                    <div className="flex justify-between text-xs text-muted-foreground">
+                                    <div className="flex flex-wrap justify-between text-xs text-muted-foreground gap-2">
                                         <span>{project.stats?.completedTasks || 0} completed</span>
                                         <span>{project.stats?.totalTasks || 0} total tasks</span>
                                         <span className="flex items-center gap-1">

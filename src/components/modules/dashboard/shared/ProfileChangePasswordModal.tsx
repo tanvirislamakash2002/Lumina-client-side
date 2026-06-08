@@ -17,11 +17,11 @@ import { Key, Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { changePassword } from "@/actions/user.action";
 
-interface MemberChangePasswordModalProps {
+interface ProfileChangePasswordModalProps {
     onRefresh: () => void;
 }
 
-export function MemberChangePasswordModal({ onRefresh }: MemberChangePasswordModalProps) {
+export function ProfileChangePasswordModal({ onRefresh }: ProfileChangePasswordModalProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -134,6 +134,7 @@ export function MemberChangePasswordModal({ onRefresh }: MemberChangePasswordMod
                 </DialogHeader>
                 <form onSubmit={handleSubmit}>
                     <div className="space-y-4 py-4">
+                        {/* Current Password */}
                         <div className="space-y-2">
                             <Label htmlFor="currentPassword">Current Password</Label>
                             <div className="relative">
@@ -157,6 +158,7 @@ export function MemberChangePasswordModal({ onRefresh }: MemberChangePasswordMod
                             {errors.currentPassword && <p className="text-sm text-red-500">{errors.currentPassword}</p>}
                         </div>
 
+                        {/* New Password */}
                         <div className="space-y-2">
                             <Label htmlFor="newPassword">New Password</Label>
                             <div className="relative">
@@ -181,6 +183,7 @@ export function MemberChangePasswordModal({ onRefresh }: MemberChangePasswordMod
                             <p className="text-xs text-muted-foreground">Password must be at least 6 characters</p>
                         </div>
 
+                        {/* Confirm Password */}
                         <div className="space-y-2">
                             <Label htmlFor="confirmPassword">Confirm New Password</Label>
                             <div className="relative">

@@ -5,11 +5,11 @@ import { getUserWorkload } from "@/actions/user.action";
 import { getMyTasks } from "@/actions/task.action";
 import { getUserProjects } from "@/actions/project-member.action";
 import { getUserActivities } from "@/actions/activity.action";
-import { MemberProfileClient } from "@/components/modules/dashboard/member/profile/MemberProfileClient";
+import { ProfileClient } from "@/components/modules/dashboard/shared/ProfileClient";
 
 export const dynamic = "force-dynamic";
 
-export default async function MemberProfilePage() {
+export default async function ProfilePage() {
     const { data: session } = await getSession();
 
     if (!session?.user) {
@@ -38,7 +38,7 @@ export default async function MemberProfilePage() {
     }
 
     return (
-        <MemberProfileClient
+        <ProfileClient
             user={user}
             workload={workload}
             tasks={tasks}
