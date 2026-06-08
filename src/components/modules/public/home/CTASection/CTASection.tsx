@@ -50,14 +50,14 @@ export function CTASection() {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-          <Button asChild size="lg" className="bg-white text-indigo-600 hover:bg-indigo-50 shadow-lg hover:shadow-xl transition-all duration-300 group">
+          <Button asChild size="lg" className="bg-white hover:text-white text-indigo-600 hover:bg-indigo-50 shadow-lg hover:shadow-xl transition-all duration-300 group">
             <Link href="/register">
               <Rocket className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
               Get Started Free
               <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </Button>
-          <Button asChild size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 hover:border-white/50">
+          <Button asChild size="lg" variant="outline" className="border-white/30 dark:text-white hover:text-white hover:bg-white/10 text-violet-900 hover:border-white/50">
             <Link href="/login">
               View Demo
             </Link>

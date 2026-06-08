@@ -85,15 +85,15 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
                     <ThemeToggle />
 
                     {/* Notifications */}
-                    <Button 
+                    {/* <Button 
                         variant="ghost" 
                         size="icon" 
                         className="relative"
                         onClick={() => router.push("/notifications")}
                     >
                         <Bell className="h-5 w-5" />
-                        {/* <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500" /> */}
-                    </Button>
+                        <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500" />
+                    </Button> */}
 
                     <div className="flex items-center gap-3 pl-3 border-l">
                         <Avatar className="h-8 w-8">

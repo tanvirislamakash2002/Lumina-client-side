@@ -68,10 +68,10 @@ export function AdminAuditHeader({ onRefresh }: AdminAuditHeaderProps) {
                         />
                     </PopoverContent>
                 </Popover>
-                <Button variant="outline" size="sm" onClick={handleExport}>
+                {/* <Button variant="outline" size="sm" onClick={handleExport}>
                     <Download className="h-4 w-4 mr-2" />
                     Export
-                </Button>
+                </Button> */}
                 <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isRefreshing}>
                     <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
                     Refresh

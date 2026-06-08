@@ -37,7 +37,7 @@ export function SettingsClient({
                 </p>
             </div>
 
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 flex flex-col">
                 <TabsList>
                     {tabs.map((tab) => {
                         const Icon = tab.icon;
@@ -49,18 +49,19 @@ export function SettingsClient({
                         );
                     })}
                 </TabsList>
+                <>
+                    <TabsContent value="notifications" className="space-y-4">
+                        <NotificationSettings initialSettings={notificationSettings} />
+                    </TabsContent>
 
-                <TabsContent value="notifications" className="space-y-4">
-                    <NotificationSettings initialSettings={notificationSettings} />
-                </TabsContent>
+                    <TabsContent value="appearance" className="space-y-4">
+                        <ThemeSettings initialSettings={themeSettings} />
+                    </TabsContent>
 
-                <TabsContent value="appearance" className="space-y-4">
-                    <ThemeSettings initialSettings={themeSettings} />
-                </TabsContent>
-
-                <TabsContent value="security" className="space-y-4">
-                    <SecuritySettings initialSettings={securitySettings} />
-                </TabsContent>
+                    <TabsContent value="security" className="space-y-4">
+                        <SecuritySettings initialSettings={securitySettings} />
+                    </TabsContent>
+                </>
             </Tabs>
         </div>
     );

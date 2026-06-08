@@ -45,9 +45,9 @@ import { useLogout } from "@/hooks/useLogout";
 // Navigation items for public routes
 const navItems = [
   { name: "Home", href: "/", icon: Home },
-  { name: "Features", href: "/#features", icon: Sparkles },
-  { name: "How It Works", href: "/#how-it-works", icon: Info },
-  { name: "About", href: "/about", icon: Info },
+  // { name: "Features", href: "/#features", icon: Sparkles },
+  // { name: "How It Works", href: "/#how-it-works", icon: Info },
+  // { name: "About", href: "/about", icon: Info },
 ];
 
 interface User {

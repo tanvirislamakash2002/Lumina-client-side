@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Sparkles, LogIn, Rocket, LayoutDashboard, CheckSquare, Users } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -15,10 +16,8 @@ export function HeroSection() {
   }, []);
 
   const getPreviewImage = () => {
-    if (!mounted) return "/images/dashboard-preview-light.png";
-    return theme === "dark" 
-      ? "/images/dashboard-preview-dark.png" 
-      : "/images/dashboard-preview-light.png";
+    if (!mounted) return "/dashboard.png";
+    return "/dashboard.png";
   };
 
   return (
@@ -99,17 +98,16 @@ export function HeroSection() {
                   app.lumina.com/dashboard
                 </div>
               </div>
-              {/* Preview Image Placeholder */}
-              <div className="bg-background p-4">
-                <div className="w-full aspect-video bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-950/50 dark:to-purple-950/50 rounded-lg flex items-center justify-center">
-                  <div className="text-center">
-                    <LayoutDashboard className="h-16 w-16 text-indigo-400 mx-auto mb-4" />
-                    <p className="text-muted-foreground">Dashboard Preview</p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Projects · Tasks · Analytics
-                    </p>
-                  </div>
-                </div>
+              {/* Dashboard Image */}
+              <div className="bg-background">
+                <Image
+                  src={getPreviewImage()}
+                  alt="Lumina Dashboard Preview"
+                  width={800}
+                  height={450}
+                  className="w-full h-auto"
+                  priority
+                />
               </div>
             </div>
 

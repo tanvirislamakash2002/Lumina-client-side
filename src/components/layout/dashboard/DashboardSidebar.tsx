@@ -74,7 +74,7 @@ const teamMemberRoutes = [
         title: "Collaboration",
         items: [
             { title: "Team", url: "/dashboard/team", icon: Users },
-            { title: "Activities", url: "/dashboard/activities", icon: Activity },
+            // { title: "Activities", url: "/dashboard/activities", icon: Activity },
             // { title: "Notifications", url: "/dashboard/notifications", icon: Bell },
         ],
     },
@@ -93,7 +93,7 @@ const projectManagerRoutes = [
         title: "Overview",
         items: [
             { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-            { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
+            // { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
         ],
     },
     {
@@ -113,13 +113,13 @@ const projectManagerRoutes = [
             // { title: "Workload", url: "/dashboard/workload", icon: Clock },
         ],
     },
-    {
-        title: "Activity",
-        items: [
-            { title: "Activities", url: "/dashboard/activities", icon: Activity },
-            // { title: "Notifications", url: "/dashboard/notifications", icon: Bell },
-        ],
-    },
+    // {
+    //     title: "Activity",
+    //     items: [
+    //         { title: "Activities", url: "/dashboard/activities", icon: Activity },
+    //         { title: "Notifications", url: "/dashboard/notifications", icon: Bell },
+    //     ],
+    // },
     {
         title: "Account",
         items: [
