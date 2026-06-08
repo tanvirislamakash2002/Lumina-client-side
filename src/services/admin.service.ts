@@ -467,6 +467,41 @@ export const adminService = {
         }
     },
 
+    getAuditStats: async (days: number = 90) => {
+    try {
+        const cookieStore = await cookies();
+        const url = new URL(`${API_URL}/admin/audit/stats`);
+        url.searchParams.set("days", days.toString());
+
+        const res = await fetch(url.toString(), {
+            headers: {
+                Cookie: cookieStore.toString(),
+            },
+            next: { tags: ["audit-stats"] },
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            return {
+                success: false,
+                message: data.message || "Failed to fetch audit stats",
+            };
+        }
+
+        return {
+            success: true,
+            data: data.data,
+        };
+    } catch (error) {
+        console.error("Get audit stats error:", error);
+        return {
+            success: false,
+            message: "Something went wrong",
+        };
+    }
+},
+
     // ============ System ============
     clearCache: async () => {
         try {

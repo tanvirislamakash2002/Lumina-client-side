@@ -181,6 +181,10 @@ export const getAuditTrail = async (params?: {
     return await adminService.getAuditTrail(params);
 };
 
+export const getAuditStats = async (days: number = 90) => {
+    return await adminService.getAuditStats(days);
+};
+
 // ============ System ============
 export const clearCache = async () => {
     const result = await adminService.clearCache();
