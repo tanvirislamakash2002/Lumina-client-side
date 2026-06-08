@@ -51,13 +51,13 @@ export function AdminUsersClient({
         if (verified && verified !== "all") params.set("verified", verified);
         if (sort) params.set("sort", sort);
         params.set("page", "1");
-        router.push(`/dashboard/admin/users?${params.toString()}`);
+        router.push(`/dashboard/users?${params.toString()}`);
     };
 
     const handlePageChange = (page: number) => {
         const params = new URLSearchParams(window.location.search);
         params.set("page", page.toString());
-        router.push(`/dashboard/admin/users?${params.toString()}`);
+        router.push(`/dashboard/users?${params.toString()}`);
     };
 
     const handleRefresh = () => {

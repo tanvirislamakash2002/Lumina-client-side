@@ -267,7 +267,7 @@ export function AdminUsersTable({ users, currentUserId, onRefresh }: AdminUsersT
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
                                                         <DropdownMenuItem asChild>
-                                                            <Link href={`/dashboard/team/${user.id}`}>
+                                                            <Link href={`/dashboard/users/${user.id}`}>
                                                                 <Eye className="h-4 w-4 mr-2" />
                                                                 View Profile
                                                             </Link>
