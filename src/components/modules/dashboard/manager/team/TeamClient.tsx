@@ -55,7 +55,12 @@ export function TeamClient({
 
     return (
         <div className="space-y-6">
-            <TeamHeader totalMembers={userStats?.totalUsers || 0} isAdmin={isAdmin} />
+            <TeamHeader 
+            totalMembers={userStats?.totalUsers || 0} 
+            isAdmin={isAdmin} 
+            projects={projects}
+            onRefresh={handleRefresh}
+            />
 
             <TeamStats userStats={userStats} teamStats={teamStats} />
 
