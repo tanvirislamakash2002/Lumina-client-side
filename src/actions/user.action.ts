@@ -97,6 +97,8 @@ export const getTeamMembersWithProjects = async (
     params?: {
         projectId?: string;
         search?: string;
+        page?: number;
+        limit?: number;
     }
 ) => {
     return await userService.getTeamMembersWithProjects(currentUserId, userRole, params);

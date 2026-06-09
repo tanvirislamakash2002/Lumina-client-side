@@ -14,25 +14,22 @@ import {
 import { Search, X } from "lucide-react";
 
 interface TeamFilterBarProps {
-    onSearch: (search: string, role: string, status: string, sort: string) => void;
-    isAdmin: boolean;
+    onSearch: (search: string, projectId: string, sort: string) => void;
+    projects: { id: string; name: string }[];
     currentSearch: string;
-    currentRole: string;
-    currentStatus: string;
+    currentProjectId: string;
     currentSort: string;
 }
 
 export function TeamFilterBar({
     onSearch,
-    isAdmin,
+    projects,
     currentSearch,
-    currentRole,
-    currentStatus,
+    currentProjectId,
     currentSort,
 }: TeamFilterBarProps) {
     const [search, setSearch] = useState(currentSearch);
-    const [role, setRole] = useState(currentRole);
-    const [status, setStatus] = useState(currentStatus);
+    const [projectId, setProjectId] = useState(currentProjectId);
     const [sort, setSort] = useState(currentSort);
     const [debouncedSearch, setDebouncedSearch] = useState(currentSearch);
     const initialRender = useRef(true);
@@ -51,27 +48,22 @@ export function TeamFilterBar({
         }
 
         const searchChanged = debouncedSearch !== currentSearch;
-        const roleChanged = role !== currentRole;
-        const statusChanged = status !== currentStatus;
+        const projectChanged = projectId !== currentProjectId;
         const sortChanged = sort !== currentSort;
 
-        if (searchChanged || roleChanged || statusChanged || sortChanged) {
-            onSearch(debouncedSearch, role, status, sort);
+        if (searchChanged || projectChanged || sortChanged) {
+            onSearch(debouncedSearch, projectId, sort);
         }
-    }, [debouncedSearch, role, status, sort]);
+    }, [debouncedSearch, projectId, sort]);
 
     const handleClearFilters = () => {
         setSearch("");
-        setRole("all");
-        setStatus("all");
+        setProjectId("all");
         setSort("name_asc");
-        onSearch("", "all", "all", "name_asc");
+        onSearch("", "all", "name_asc");
     };
 
-    const hasActiveFilters = search !== "" ||
-        role !== "all" ||
-        (isAdmin && status !== "all") ||
-        sort !== "name_asc";
+    const hasActiveFilters = search !== "" || projectId !== "all" || sort !== "name_asc";
 
     return (
         <Card>
@@ -87,30 +79,19 @@ export function TeamFilterBar({
                         />
                     </div>
 
-                    <Select value={role} onValueChange={setRole}>
-                        <SelectTrigger className="w-full sm:w-40">
-                            <SelectValue placeholder="Role" />
+                    <Select value={projectId} onValueChange={setProjectId}>
+                        <SelectTrigger className="w-full sm:w-56">
+                            <SelectValue placeholder="Filter by Project" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All Roles</SelectItem>
-                            <SelectItem value="ADMIN">Admin</SelectItem>
-                            <SelectItem value="PROJECT_MANAGER">Project Manager</SelectItem>
-                            <SelectItem value="TEAM_MEMBER">Team Member</SelectItem>
+                            <SelectItem value="all">All Projects</SelectItem>
+                            {projects.map((project) => (
+                                <SelectItem key={project.id} value={project.id}>
+                                    {project.name}
+                                </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
-
-                    {isAdmin && (
-                        <Select value={status} onValueChange={setStatus}>
-                            <SelectTrigger className="w-full sm:w-40">
-                                <SelectValue placeholder="Status" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">All Status</SelectItem>
-                                <SelectItem value="ACTIVE">Active</SelectItem>
-                                <SelectItem value="SUSPENDED">Suspended</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    )}
 
                     <Select value={sort} onValueChange={setSort}>
                         <SelectTrigger className="w-full sm:w-48">
@@ -119,9 +100,10 @@ export function TeamFilterBar({
                         <SelectContent>
                             <SelectItem value="name_asc">Name (A-Z)</SelectItem>
                             <SelectItem value="name_desc">Name (Z-A)</SelectItem>
-                            <SelectItem value="role_asc">Role (A-Z)</SelectItem>
                             <SelectItem value="newest">Newest First</SelectItem>
                             <SelectItem value="oldest">Oldest First</SelectItem>
+                            <SelectItem value="tasks_high">Most Tasks</SelectItem>
+                            <SelectItem value="tasks_low">Least Tasks</SelectItem>
                         </SelectContent>
                     </Select>
 

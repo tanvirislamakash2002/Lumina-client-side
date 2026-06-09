@@ -70,12 +70,12 @@ export function MemberRecentActivities({ activities }: MemberRecentActivitiesPro
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Recent Activities</CardTitle>
-                <Button asChild variant="ghost" size="sm" className="gap-1">
+                {/* <Button asChild variant="ghost" size="sm" className="gap-1">
                     <Link href="/activities">
                         View all
                         <ArrowRight className="h-3 w-3" />
                     </Link>
-                </Button>
+                </Button> */}
             </CardHeader>
             <CardContent>
                 <div className="space-y-4">
@@ -98,7 +98,7 @@ export function MemberRecentActivities({ activities }: MemberRecentActivitiesPro
                                         {activity.project && (
                                             <>
                                                 <span className="text-xs text-muted-foreground">•</span>
-                                                <Link href={`/projects/${activity.project.id}`} className="text-xs text-indigo-600 hover:underline">
+                                                <Link href={`/dashboard/my-projects/${activity.project.id}`} className="text-xs text-indigo-600 hover:underline">
                                                     {activity.project.name}
                                                 </Link>
                                             </>

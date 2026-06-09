@@ -58,7 +58,7 @@ export function MemberMyTasks({ todoTasks, inProgressTasks, recentCompletedTasks
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>My Tasks</CardTitle>
-                <Link href="/tasks/my-tasks" className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+                <Link href="/dashboard/my-tasks" className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
                     View all tasks
                     <ArrowRight className="h-3 w-3" />
                 </Link>
@@ -80,7 +80,7 @@ export function MemberMyTasks({ todoTasks, inProgressTasks, recentCompletedTasks
                             todoTasks.map((task) => (
                                 <div key={task.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
                                     <div className="flex-1 min-w-0">
-                                        <Link href={`/tasks/${task.id}`} className="font-medium hover:text-indigo-600 transition-colors">
+                                        <Link href={`/dashboard/my-tasks/${task.id}`} className="font-medium hover:text-indigo-600 transition-colors">
                                             {task.title}
                                         </Link>
                                         <div className="flex items-center gap-2 mt-1">
@@ -147,7 +147,7 @@ export function MemberMyTasks({ todoTasks, inProgressTasks, recentCompletedTasks
                             inProgressTasks.map((task) => (
                                 <div key={task.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
                                     <div className="flex-1 min-w-0">
-                                        <Link href={`/tasks/${task.id}`} className="font-medium hover:text-indigo-600 transition-colors">
+                                        <Link href={`/dashboard/my-tasks/${task.id}`} className="font-medium hover:text-indigo-600 transition-colors">
                                             {task.title}
                                         </Link>
                                         <div className="flex items-center gap-2 mt-1">
@@ -209,7 +209,7 @@ export function MemberMyTasks({ todoTasks, inProgressTasks, recentCompletedTasks
                             {recentCompletedTasks.map((task) => (
                                 <div key={task.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/30 opacity-75">
                                     <div className="flex-1 min-w-0">
-                                        <Link href={`/tasks/${task.id}`} className="font-medium hover:text-indigo-600 transition-colors">
+                                        <Link href={`/dashboard/my-tasks/${task.id}`} className="font-medium hover:text-indigo-600 transition-colors">
                                             {task.title}
                                         </Link>
                                         <p className="text-xs text-muted-foreground mt-1">

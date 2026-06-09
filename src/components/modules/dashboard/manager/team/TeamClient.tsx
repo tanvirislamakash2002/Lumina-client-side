@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TeamHeader } from "./TeamHeader";
 import { TeamStats } from "./TeamStats";
@@ -13,11 +12,11 @@ interface TeamClientProps {
     initialPagination: any;
     userStats: any;
     teamStats: any;
+    projects: { id: string; name: string }[];  // Add this
     isAdmin: boolean;
     currentSearch: string;
-    currentRole: string;
-    currentStatus: string;
-    currentSort: string;
+    currentProjectId: string;  // Change from currentRole
+    currentSort: string;  // Change from currentSort (keep but remove status/role)
     currentPage: number;
 }
 
@@ -26,20 +25,19 @@ export function TeamClient({
     initialPagination,
     userStats,
     teamStats,
+    projects,  // Add this
     isAdmin,
     currentSearch,
-    currentRole,
-    currentStatus,
+    currentProjectId,  // Change from currentRole
     currentSort,
     currentPage,
 }: TeamClientProps) {
     const router = useRouter();
 
-    const handleSearch = (search: string, role: string, status: string, sort: string) => {
+    const handleSearch = (search: string, projectId: string, sort: string) => {
         const params = new URLSearchParams();
         if (search) params.set("search", search);
-        if (role && role !== "all") params.set("role", role);
-        if (status && status !== "all") params.set("status", status);
+        if (projectId && projectId !== "all") params.set("projectId", projectId);
         if (sort) params.set("sort", sort);
         params.set("page", "1");
         router.push(`/dashboard/team?${params.toString()}`);
@@ -63,10 +61,9 @@ export function TeamClient({
 
             <TeamFilterBar
                 onSearch={handleSearch}
-                isAdmin={isAdmin}
+                projects={projects}
                 currentSearch={currentSearch}
-                currentRole={currentRole}
-                currentStatus={currentStatus}
+                currentProjectId={currentProjectId}
                 currentSort={currentSort}
             />
 

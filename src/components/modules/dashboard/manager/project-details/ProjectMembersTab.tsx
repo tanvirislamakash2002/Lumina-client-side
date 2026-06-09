@@ -55,7 +55,6 @@ export function ProjectMembersTab({
     const [isLoading, setIsLoading] = useState(false);
 
     const fetchAvailableMembers = async () => {
-        if (!addDialogOpen) return;
         setIsLoading(true);
         try {
             const result = await getAvailableMembers(projectId);
@@ -121,7 +120,9 @@ export function ProjectMembersTab({
                         open={addDialogOpen}
                         onOpenChange={(open) => {
                             setAddDialogOpen(open);
-                            if (open) fetchAvailableMembers();
+                            if (open) {
+                                fetchAvailableMembers();
+                            }
                         }}
                     >
                         <DialogTrigger asChild>

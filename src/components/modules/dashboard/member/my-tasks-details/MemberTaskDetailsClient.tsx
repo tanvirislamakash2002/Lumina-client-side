@@ -49,7 +49,7 @@ export function MemberTaskDetailsClient({
                 <div className="lg:col-span-2 space-y-6">
                     <MemberTaskInfoCard task={task} />
 
-                    <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 flex flex-col">
                         <TabsList className="flex flex-wrap">
                             <TabsTrigger value="comments">
                                 Comments ({comments.length})
@@ -61,30 +61,31 @@ export function MemberTaskDetailsClient({
                                 Activities ({activities.length})
                             </TabsTrigger>
                         </TabsList>
+                        <>
+                            <TabsContent value="comments" className="space-y-4">
+                                <MemberTaskComments
+                                    taskId={taskId}
+                                    initialComments={comments}
+                                    currentUserId={currentUserId}
+                                    onCommentUpdate={handleRefresh}
+                                />
+                            </TabsContent>
 
-                        <TabsContent value="comments" className="space-y-4">
-                            <MemberTaskComments
-                                taskId={taskId}
-                                initialComments={comments}
-                                currentUserId={currentUserId}
-                                onCommentUpdate={handleRefresh}
-                            />
-                        </TabsContent>
+                            <TabsContent value="attachments" className="space-y-4">
+                                <MemberTaskAttachments
+                                    taskId={taskId}
+                                    initialAttachments={attachments}
+                                    currentUserId={currentUserId}
+                                    onAttachmentUpdate={handleRefresh}
+                                />
+                            </TabsContent>
 
-                        <TabsContent value="attachments" className="space-y-4">
-                            <MemberTaskAttachments
-                                taskId={taskId}
-                                initialAttachments={attachments}
-                                currentUserId={currentUserId}
-                                onAttachmentUpdate={handleRefresh}
-                            />
-                        </TabsContent>
-
-                        <TabsContent value="activities" className="space-y-4">
-                            <MemberTaskActivities
-                                initialActivities={activities}
-                            />
-                        </TabsContent>
+                            <TabsContent value="activities" className="space-y-4">
+                                <MemberTaskActivities
+                                    initialActivities={activities}
+                                />
+                            </TabsContent>
+                        </>
                     </Tabs>
                 </div>
 
