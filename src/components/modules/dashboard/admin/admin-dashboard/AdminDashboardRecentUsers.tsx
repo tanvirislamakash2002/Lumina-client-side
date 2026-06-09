@@ -58,7 +58,7 @@ export function AdminDashboardRecentUsers({ users }: AdminDashboardRecentUsersPr
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Recent Users</CardTitle>
                 <Button asChild variant="ghost" size="sm">
-                    <Link href="/admin/users">View all</Link>
+                    <Link href="/dashboard/users">View all</Link>
                 </Button>
             </CardHeader>
             <CardContent>
@@ -85,7 +85,7 @@ export function AdminDashboardRecentUsers({ users }: AdminDashboardRecentUsersPr
                                     {user.accountStatus}
                                 </Badge>
                                 <Button asChild variant="ghost" size="icon" className="h-8 w-8">
-                                    <Link href={`/admin/users/${user.id}`}>
+                                    <Link href={`/dashboard/users/${user.id}`}>
                                         <Eye className="h-4 w-4" />
                                     </Link>
                                 </Button>

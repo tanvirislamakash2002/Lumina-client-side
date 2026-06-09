@@ -21,7 +21,7 @@ const actions: Action[] = [
         title: "Manage Users",
         description: "View, edit, and manage user accounts",
         icon: Users,
-        href: "/admin/users",
+        href: "/dashboard/users",
         color: "text-indigo-600",
         bgColor: "bg-indigo-50 dark:bg-indigo-950/30",
     },
@@ -29,7 +29,7 @@ const actions: Action[] = [
         title: "Manage Projects",
         description: "View and manage all projects",
         icon: FolderKanban,
-        href: "/admin/projects",
+        href: "/dashboard/projects",
         color: "text-emerald-600",
         bgColor: "bg-emerald-50 dark:bg-emerald-950/30",
     },
@@ -37,7 +37,7 @@ const actions: Action[] = [
         title: "System Settings",
         description: "Configure system preferences",
         icon: Settings,
-        href: "/settings/system",
+        href: "/dashboard/settings",
         color: "text-blue-600",
         bgColor: "bg-blue-50 dark:bg-blue-950/30",
     },
@@ -45,7 +45,7 @@ const actions: Action[] = [
         title: "Audit Trail",
         description: "View system audit logs",
         icon: FileText,
-        href: "/admin/audit",
+        href: "/dashboard/audit",
         color: "text-purple-600",
         bgColor: "bg-purple-50 dark:bg-purple-950/30",
     },
@@ -53,7 +53,7 @@ const actions: Action[] = [
         title: "System Logs",
         description: "View error and system logs",
         icon: Activity,
-        href: "/admin/logs",
+        href: "/dashboard/logs",
         color: "text-amber-600",
         bgColor: "bg-amber-50 dark:bg-amber-950/30",
     },
@@ -101,7 +101,7 @@ export function AdminDashboardQuickActions() {
                 </div>
                 <Button
                     variant="outline"
-                    className="w-full justify-start"
+                    className="w-full justify-start  h-auto py-3 px-4"
                     onClick={handleClearCache}
                 >
                     <div className="p-2 rounded-lg bg-muted mr-3">

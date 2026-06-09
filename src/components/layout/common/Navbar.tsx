@@ -85,7 +85,7 @@ export function Navbar() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchTerm)}`);
+      router.push(`/dashboard/search?q=${encodeURIComponent(searchTerm)}`);
       setIsMobileMenuOpen(false);
     }
   };
@@ -98,11 +98,11 @@ export function Navbar() {
 
   const getDashboardRoute = () => {
     if (!user) return "/";
-    return user.role === "ADMIN" ? "/admin" : "/dashboard";
+    return user.role === "ADMIN" ? "/dashboard" : "/dashboard";
   };
 
   const getProfileRoute = () => {
-    return "/profile";
+    return "/dashboard/profile";
   };
 
   const getInitials = (name: string) => {
@@ -209,35 +209,38 @@ export function Navbar() {
 
                     {/* Projects */}
                     <DropdownMenuItem asChild>
-                      <Link href="/projects" className="cursor-pointer">
+                      <Link href="/dashboard/projects" className="cursor-pointer">
                         <FolderKanban className="mr-2 h-4 w-4" />
                         Projects
                       </Link>
                     </DropdownMenuItem>
+                    {user.role !== "ADMIN" && (
+                      <>
+                        {/* Tasks */}
+                        <DropdownMenuItem asChild>
+                          <Link href="/dashboard/my-tasks" className="cursor-pointer">
+                            <CheckSquare className="mr-2 h-4 w-4" />
+                            My Tasks
+                          </Link>
+                        </DropdownMenuItem>
 
-                    {/* Tasks */}
-                    <DropdownMenuItem asChild>
-                      <Link href="/my-tasks" className="cursor-pointer">
-                        <CheckSquare className="mr-2 h-4 w-4" />
-                        My Tasks
-                      </Link>
-                    </DropdownMenuItem>
-
-                    {/* Team */}
-                    <DropdownMenuItem asChild>
-                      <Link href="/team" className="cursor-pointer">
-                        <Users className="mr-2 h-4 w-4" />
-                        Team
-                      </Link>
-                    </DropdownMenuItem>
+                        {/* Team */}
+                        <DropdownMenuItem asChild>
+                          <Link href="/dashboard/team" className="cursor-pointer">
+                            <Users className="mr-2 h-4 w-4" />
+                            Team
+                          </Link>
+                        </DropdownMenuItem>
+                      </>
+                    )}
 
                     {/* Notifications */}
-                    <DropdownMenuItem asChild>
+                    {/* <DropdownMenuItem asChild>
                       <Link href="/notifications" className="cursor-pointer">
                         <Bell className="mr-2 h-4 w-4" />
                         Notifications
                       </Link>
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
 
                     {/* Profile */}
                     <DropdownMenuItem asChild>
@@ -249,7 +252,7 @@ export function Navbar() {
 
                     {/* Settings */}
                     <DropdownMenuItem asChild>
-                      <Link href="/settings/notifications" className="cursor-pointer">
+                      <Link href="/dashboard/settings" className="cursor-pointer">
                         <Settings className="mr-2 h-4 w-4" />
                         Settings
                       </Link>
@@ -260,7 +263,7 @@ export function Navbar() {
                       <>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
-                          <Link href="/admin" className="cursor-pointer">
+                          <Link href="/dashboard" className="cursor-pointer">
                             <Shield className="mr-2 h-4 w-4" />
                             Admin Panel
                           </Link>

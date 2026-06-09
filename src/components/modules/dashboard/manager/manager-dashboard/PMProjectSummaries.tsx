@@ -52,7 +52,7 @@ export function PMProjectSummaries({ projects }: PMProjectSummariesProps) {
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Your Projects</CardTitle>
-                <Link href="/projects" className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+                <Link href="/dashboard/projects" className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
                     View all
                     <ArrowRight className="h-3 w-3" />
                 </Link>
@@ -61,7 +61,7 @@ export function PMProjectSummaries({ projects }: PMProjectSummariesProps) {
                 {activeProjects.map((project) => {
                     const progress = project.stats?.progress || 0;
                     return (
-                        <Link key={project.id} href={`/projects/${project.id}`} className="block group">
+                        <Link key={project.id} href={`/dashboard/projects/${project.id}`} className="block group">
                             <div className="space-y-2 p-3 rounded-lg hover:bg-muted/50 transition-colors">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2">

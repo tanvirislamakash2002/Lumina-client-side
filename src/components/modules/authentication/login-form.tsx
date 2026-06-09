@@ -87,7 +87,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
         const userRole = userData?.role;
 
         if (userRole === "ADMIN") {
-          router.push("/admin");
+          router.push("/dashboard");
         } else {
           router.push("/dashboard");
         }
@@ -135,7 +135,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
       toast.success(`Logged in as ${role === "admin" ? "ADMIN" : role === "projectManager" ? "PROJECT MANAGER" : "TEAM MEMBER"}!`, { id: toastId });
       
       if (role === "admin") {
-        router.push("/admin");
+        router.push("/dashboard");
       } else {
         router.push("/dashboard");
       }

@@ -39,7 +39,7 @@ export function PMTeamWorkload({ members }: PMTeamWorkloadProps) {
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Team Workload</CardTitle>
-                <Link href="/team" className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+                <Link href="/dashboard/team" className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
                     View all
                     <ArrowRight className="h-3 w-3" />
                 </Link>

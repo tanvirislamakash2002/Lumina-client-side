@@ -42,14 +42,14 @@ export function PMUpcomingDeadlines({ tasks }: PMUpcomingDeadlinesProps) {
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Upcoming Deadlines</CardTitle>
-                <Link href="/tasks" className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+                <Link href="/dashboard/tasks" className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
                     View all
                     <ArrowRight className="h-3 w-3" />
                 </Link>
             </CardHeader>
             <CardContent className="space-y-3">
                 {tasks.map((task) => (
-                    <Link key={task.id} href={`/tasks/${task.id}`} className="block group">
+                    <Link key={task.id} href={`/dashboard/tasks/${task.id}`} className="block group">
                         <div className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors">
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">

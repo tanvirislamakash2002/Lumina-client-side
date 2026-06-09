@@ -35,14 +35,14 @@ export function PMHighPriorityTasks({ tasks }: PMHighPriorityTasksProps) {
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>High Priority Tasks</CardTitle>
-                <Link href="/tasks?priority=HIGH" className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+                <Link href="/dashboard/tasks?priority=HIGH" className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
                     View all
                     <ArrowRight className="h-3 w-3" />
                 </Link>
             </CardHeader>
             <CardContent className="space-y-3">
                 {tasks.map((task) => (
-                    <Link key={task.id} href={`/tasks/${task.id}`} className="block group">
+                    <Link key={task.id} href={`/dashboard/tasks/${task.id}`} className="block group">
                         <div className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors">
                             <div className="flex items-center gap-3 flex-1 min-w-0">
                                 <AlertCircle className="h-4 w-4 text-red-500 flex-shrink-0" />

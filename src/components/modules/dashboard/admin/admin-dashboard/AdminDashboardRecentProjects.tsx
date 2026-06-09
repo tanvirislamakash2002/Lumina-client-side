@@ -37,7 +37,7 @@ export function AdminDashboardRecentProjects({ projects }: AdminDashboardRecentP
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Recent Projects</CardTitle>
                 <Button asChild variant="ghost" size="sm">
-                    <Link href="/admin/projects">View all</Link>
+                    <Link href="/dashboard/projects">View all</Link>
                 </Button>
             </CardHeader>
             <CardContent>
@@ -62,7 +62,7 @@ export function AdminDashboardRecentProjects({ projects }: AdminDashboardRecentP
                                     <p className="text-xs text-muted-foreground">{project.stats?.memberCount || 0} members</p>
                                 </div>
                                 <Button asChild variant="ghost" size="icon" className="h-8 w-8">
-                                    <Link href={`/projects/${project.id}`}>
+                                    <Link href={`/dashboard/projects/${project.id}`}>
                                         <Eye className="h-4 w-4" />
                                     </Link>
                                 </Button>

@@ -79,7 +79,7 @@ export function AdminDashboardRecentActivities({ activities }: AdminDashboardRec
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Recent Activities</CardTitle>
                 <Button asChild variant="ghost" size="sm">
-                    <Link href="/admin/audit">View all</Link>
+                    <Link href="/dashboard/audit">View all</Link>
                 </Button>
             </CardHeader>
             <CardContent>

@@ -15,13 +15,13 @@ export function PMDashboardHeader() {
             </div>
             <div className="flex gap-2">
                 <Button asChild variant="outline" size="sm" className="gap-2">
-                    <Link href="/projects/create">
+                    <Link href="/dashboard/projects/create">
                         <FolderPlus className="h-4 w-4" />
                         New Project
                     </Link>
                 </Button>
                 <Button asChild variant="default" size="sm" className="gap-2 bg-indigo-600 hover:bg-indigo-700">
-                    <Link href="/tasks/create">
+                    <Link href="/dashboard/tasks/create">
                         <Plus className="h-4 w-4" />
                         Create Task
                     </Link>
