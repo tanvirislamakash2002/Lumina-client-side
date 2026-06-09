@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, ArrowLeft, Loader2, Trash2 } from "lucide-react";
+import { CalendarIcon, ArrowLeft, Loader2, Trash2, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,37 +30,20 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { updateTask } from "@/actions/task.action";
+import { getProjectMembers, getAvailableMembers, addMember } from "@/actions/project-member.action";
 import { DeleteTaskDialog } from "../DeleteTaskDialog";
 
-// Form validation schema
 const taskEditSchema = z.object({
-    title: z.string()
-        .min(3, "Task title must be at least 3 characters")
-        .max(100, "Task title must not exceed 100 characters"),
-    description: z.string()
-        .max(500, "Description must not exceed 500 characters")
-        .optional(),
-    projectId: z.string({
-        message: "Please select a project",
-    }),
+    title: z.string().min(3, "Task title must be at least 3 characters").max(100),
+    description: z.string().max(500).optional(),
+    projectId: z.string({ message: "Please select a project" }),
     assignedTo: z.string().optional(),
-    dueDate: z.date()
-        .min(new Date(), "Due date cannot be in the past"),
+    dueDate: z.date().min(new Date(), "Due date cannot be in the past"),
     priority: z.enum(["HIGH", "MEDIUM", "LOW"]),
     status: z.enum(["TODO", "IN_PROGRESS", "COMPLETED"]),
 });
 
 type TaskEditFormValues = z.infer<typeof taskEditSchema>;
-
-interface EditTaskClientProps {
-    task: any;
-    projects: any[];
-    members: any[];
-    canEditAll: boolean;
-    currentUserId: string;
-    userRole: string;
-    taskId: string;
-}
 
 const statusColors: Record<string, string> = {
     TODO: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
@@ -68,30 +51,14 @@ const statusColors: Record<string, string> = {
     COMPLETED: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
 };
 
-export function EditTaskClient({
-    task,
-    projects,
-    members,
-    canEditAll,
-    currentUserId,
-    userRole,
-    taskId,
-}: EditTaskClientProps) {
+export function EditTaskClient({ task, projects, members, canEditAll, currentUserId, userRole, taskId }: any) {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-    const [filteredMembers, setFilteredMembers] = useState(members);
-
-    // Filter members based on role for dropdown
-    useEffect(() => {
-        let filtered = members;
-        if (userRole === "PROJECT_MANAGER") {
-            filtered = members.filter(
-                (member: any) => member.id === currentUserId || member.role === "TEAM_MEMBER"
-            );
-        }
-        setFilteredMembers(filtered);
-    }, [members, userRole, currentUserId]);
+    const [projectMembers, setProjectMembers] = useState<any[]>([]);
+    const [availableMembers, setAvailableMembers] = useState<any[]>([]);
+    const [isLoadingMembers, setIsLoadingMembers] = useState(false);
+    const [isAddingMember, setIsAddingMember] = useState(false);
 
     const {
         register,
@@ -114,11 +81,83 @@ export function EditTaskClient({
 
     const dueDate = watch("dueDate");
     const selectedStatus = watch("status");
-    const descriptionValue = watch("description") || "";
+    const selectedProjectId = watch("projectId");
+    const selectedAssignedTo = watch("assignedTo");
     const isTaskCompleted = task.status === "COMPLETED";
 
+    // Fetch project members when project changes
+    useEffect(() => {
+        const fetchProjectMembers = async () => {
+            if (!selectedProjectId) {
+                setProjectMembers([]);
+                setAvailableMembers([]);
+                return;
+            }
+
+            setIsLoadingMembers(true);
+            try {
+                // Fetch current project members
+                const membersResult = await getProjectMembers(selectedProjectId, { page: 1, limit: 100 });
+                const currentMembers = membersResult.success ? membersResult.data?.members || [] : [];
+                setProjectMembers(currentMembers);
+
+                // Fetch available members (users not in project)
+                const availableResult = await getAvailableMembers(selectedProjectId);
+                const available = availableResult.success ? availableResult.data || [] : [];
+                
+                // Filter out current assignee if they're not in project (but are assigned to task)
+                const filteredAvailable = available.filter((m: any) => m.id !== task.assignedTo?.id);
+                setAvailableMembers(filteredAvailable);
+            } catch (error) {
+                console.error("Failed to fetch project members:", error);
+            } finally {
+                setIsLoadingMembers(false);
+            }
+        };
+
+        fetchProjectMembers();
+    }, [selectedProjectId, task.assignedTo?.id]);
+
+    const handleAssignToChange = async (memberId: string) => {
+        if (memberId === "none") {
+            setValue("assignedTo", "");
+            return;
+        }
+
+        // Check if selected member is already in the project
+        const isMember = projectMembers.some((m: any) => m.id === memberId);
+        
+        if (isMember) {
+            setValue("assignedTo", memberId);
+        } else {
+            setIsAddingMember(true);
+            try {
+                const addResult = await addMember(selectedProjectId, memberId);
+                if (addResult.success) {
+                    toast.success("Member added to project");
+                    
+                    // Refresh project members
+                    const membersResult = await getProjectMembers(selectedProjectId, { page: 1, limit: 100 });
+                    const updatedMembers = membersResult.success ? membersResult.data?.members || [] : [];
+                    setProjectMembers(updatedMembers);
+                    
+                    // Remove from available
+                    setAvailableMembers(prev => prev.filter((m: any) => m.id !== memberId));
+                    
+                    setValue("assignedTo", memberId);
+                    toast.success("Member added to project and assigned to task");
+                } else {
+                    toast.error(addResult.message || "Failed to add member");
+                }
+            } catch (error) {
+                toast.error("Something went wrong");
+            } finally {
+                setIsAddingMember(false);
+            }
+        }
+    };
+
     const onSubmit = async (data: TaskEditFormValues) => {
-        // Prevent reassigning completed tasks
         if (isTaskCompleted && data.assignedTo !== task.assignedTo?.id) {
             toast.error("Completed tasks cannot be reassigned");
             return;
@@ -144,27 +183,59 @@ export function EditTaskClient({
             }
         } catch (error) {
             toast.error("Something went wrong");
-            console.error("Update task error:", error);
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    const handleDeleteSuccess = () => {
-        router.push("/dashboard/tasks");
-        router.refresh();
+    const getAssignOptions = () => {
+        const options: any[] = [];
+
+        // Current assignee if not in project members
+        const currentAssignee = task.assignedTo;
+        const isCurrentInProject = projectMembers.some((m: any) => m.id === currentAssignee?.id);
+        
+        if (currentAssignee && !isCurrentInProject) {
+            options.push({
+                label: "Current Assignee",
+                options: [{
+                    value: currentAssignee.id,
+                    label: `${currentAssignee.name} (${currentAssignee.email}) - Current`,
+                    isAvailable: false,
+                }],
+            });
+        }
+
+        if (projectMembers.length > 0) {
+            options.push({
+                label: "Project Members",
+                options: projectMembers.map((m: any) => ({
+                    value: m.id,
+                    label: `${m.name} (${m.email})`,
+                    isAvailable: false,
+                })),
+            });
+        }
+
+        if (availableMembers.length > 0) {
+            options.push({
+                label: "Available Members (will be added to project)",
+                options: availableMembers.map((m: any) => ({
+                    value: m.id,
+                    label: `${m.name} (${m.email})`,
+                    isAvailable: true,
+                })),
+            });
+        }
+
+        return options;
     };
 
-    // Determine which fields are disabled
     const isProjectDisabled = !canEditAll || isTaskCompleted;
-    const isAssigneeDisabled = !canEditAll || isTaskCompleted;
-    const isDueDateDisabled = !canEditAll;
-    const isPriorityDisabled = !canEditAll;
-    const isStatusDisabled = !canEditAll && !canEditAll; // Assigned user can change status
 
     return (
         <div className="space-y-6">
-            {/* Header with breadcrumb */}
+            {/* Header */}
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                     <Button variant="ghost" size="icon" asChild>
@@ -174,233 +245,134 @@ export function EditTaskClient({
                     </Button>
                     <div>
                         <h1 className="text-3xl font-bold tracking-tight">Edit Task</h1>
-                        <p className="text-muted-foreground mt-1">
-                            Update your task information.
-                        </p>
+                        <p className="text-muted-foreground mt-1">Update your task information.</p>
                     </div>
                 </div>
-                <div className="hidden sm:block">
-                    <Badge className={statusColors[task.status]}>
-                        Current: {task.status.replace("_", " ")}
-                    </Badge>
-                </div>
+                <Badge className={statusColors[task.status]}>Current: {task.status.replace("_", " ")}</Badge>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="grid gap-6 lg:grid-cols-7">
-                    {/* Main Form - Left Column (4 cols) */}
+                    {/* Main Form */}
                     <div className="lg:col-span-4 space-y-6">
                         <Card>
                             <CardHeader>
                                 <CardTitle>Task Information</CardTitle>
-                                <CardDescription>
-                                    Update the details of your task.
-                                </CardDescription>
+                                <CardDescription>Update the details of your task.</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                {/* Task Title */}
+                                {/* Title */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="title">
-                                        Task Title <span className="text-red-500">*</span>
-                                    </Label>
-                                    <Input
-                                        id="title"
-                                        placeholder="Enter task title"
-                                        {...register("title")}
-                                        className={errors.title ? "border-red-500" : ""}
-                                        disabled={!canEditAll}
-                                    />
-                                    {errors.title && (
-                                        <p className="text-sm text-red-500">{errors.title.message}</p>
-                                    )}
+                                    <Label>Task Title <span className="text-red-500">*</span></Label>
+                                    <Input {...register("title")} disabled={!canEditAll} />
+                                    {errors.title && <p className="text-sm text-red-500">{errors.title.message}</p>}
                                 </div>
 
                                 {/* Description */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="description">Description</Label>
-                                    <Textarea
-                                        id="description"
-                                        placeholder="Describe what needs to be done..."
-                                        rows={4}
-                                        {...register("description")}
-                                        className={errors.description ? "border-red-500" : ""}
-                                    />
-                                    <p className="text-xs text-muted-foreground">
-                                        {descriptionValue.length}/500 characters
-                                    </p>
-                                    {errors.description && (
-                                        <p className="text-sm text-red-500">{errors.description.message}</p>
-                                    )}
+                                    <Label>Description</Label>
+                                    <Textarea rows={4} {...register("description")} />
+                                    <p className="text-xs text-muted-foreground">{watch("description")?.length || 0}/500</p>
                                 </div>
 
                                 {/* Project */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="projectId">
-                                        Project <span className="text-red-500">*</span>
-                                    </Label>
+                                    <Label>Project <span className="text-red-500">*</span></Label>
                                     <Select
-                                        value={watch("projectId") || "none"}
-                                        onValueChange={(value) => setValue("projectId", value === "none" ? "" : value, { shouldValidate: true })}
+                                        value={selectedProjectId || "none"}
+                                        onValueChange={(value) => setValue("projectId", value === "none" ? "" : value)}
                                         disabled={isProjectDisabled}
                                     >
-                                        <SelectTrigger className={errors.projectId ? "border-red-500" : ""}>
+                                        <SelectTrigger>
                                             <SelectValue placeholder="Select a project" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="none" disabled>Select a project</SelectItem>
-                                            {projects.map((project) => (
-                                                <SelectItem key={project.id} value={project.id}>
-                                                    {project.name}
-                                                </SelectItem>
+                                            {projects.map((project: any) => (
+                                                <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    {isTaskCompleted && (
-                                        <p className="text-xs text-amber-600">
-                                            Project cannot be changed for completed tasks.
-                                        </p>
-                                    )}
-                                    {errors.projectId && (
-                                        <p className="text-sm text-red-500">{errors.projectId.message}</p>
-                                    )}
+                                    {isTaskCompleted && <p className="text-xs text-amber-600">Project cannot be changed for completed tasks.</p>}
                                 </div>
 
                                 {/* Assigned To */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="assignedTo">Assign To</Label>
+                                    <Label>Assign To</Label>
                                     <Select
-                                        value={watch("assignedTo") || "none"}
-                                        onValueChange={(value) => setValue("assignedTo", value === "none" ? "" : value)}
-                                        disabled={isAssigneeDisabled}
+                                        value={selectedAssignedTo || "none"}
+                                        onValueChange={handleAssignToChange}
+                                        disabled={!selectedProjectId || isLoadingMembers || isAddingMember || isTaskCompleted}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select a team member" />
+                                            <SelectValue placeholder={!selectedProjectId ? "Select a project first" : "Select a team member"} />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="none">Unassigned</SelectItem>
-                                            {filteredMembers.map((member: any) => (
-                                                <SelectItem key={member.id} value={member.id}>
-                                                    <div className="flex items-center gap-2">
-                                                        <span>{member.name}</span>
-                                                        {member.id === currentUserId && (
-                                                            <span className="text-xs text-indigo-600">(Me)</span>
-                                                        )}
-                                                        {member.role === "TEAM_MEMBER" && (
-                                                            <span className="text-xs text-muted-foreground">(Member)</span>
-                                                        )}
-                                                    </div>
-                                                </SelectItem>
+                                            {getAssignOptions().map((group, idx) => (
+                                                <div key={idx}>
+                                                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">{group.label}</div>
+                                                    {group.options.map((opt: any) => (
+                                                        <SelectItem key={opt.value} value={opt.value}>
+                                                            <div className="flex items-center gap-2">
+                                                                {opt.isAvailable && <UserPlus className="h-3 w-3 text-indigo-500" />}
+                                                                <span>{opt.label}</span>
+                                                            </div>
+                                                        </SelectItem>
+                                                    ))}
+                                                </div>
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    {isTaskCompleted && (
-                                        <p className="text-xs text-amber-600">
-                                            Completed tasks cannot be reassigned.
-                                        </p>
-                                    )}
+                                    {isTaskCompleted && <p className="text-xs text-amber-600">Completed tasks cannot be reassigned.</p>}
+                                    {isAddingMember && <p className="text-xs text-indigo-600">Adding member to project...</p>}
                                 </div>
 
                                 {/* Due Date */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="dueDate">
-                                        Due Date <span className="text-red-500">*</span>
-                                    </Label>
+                                    <Label>Due Date <span className="text-red-500">*</span></Label>
                                     <Popover>
                                         <PopoverTrigger asChild>
-                                            <Button
-                                                variant="outline"
-                                                className={cn(
-                                                    "w-full justify-start text-left font-normal",
-                                                    !dueDate && "text-muted-foreground",
-                                                    errors.dueDate && "border-red-500"
-                                                )}
-                                                disabled={isDueDateDisabled}
-                                            >
+                                            <Button variant="outline" className={cn("w-full justify-start text-left", !dueDate && "text-muted-foreground")}>
                                                 <CalendarIcon className="mr-2 h-4 w-4" />
-                                                {dueDate ? format(dueDate, "PPP") : "Select due date"}
+                                                {dueDate ? format(dueDate, "PPP") : "Select date"}
                                             </Button>
                                         </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0" align="start">
-                                            <Calendar
-                                                mode="single"
-                                                selected={dueDate}
-                                                onSelect={(date) => setValue("dueDate", date as Date, { shouldValidate: true })}
-                                                disabled={{ before: new Date() }}
-                                                initialFocus
-                                            />
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar mode="single" selected={dueDate} onSelect={(date) => setValue("dueDate", date as Date)} disabled={{ before: new Date() }} />
                                         </PopoverContent>
                                     </Popover>
-                                    {errors.dueDate && (
-                                        <p className="text-sm text-red-500">{errors.dueDate.message}</p>
-                                    )}
                                 </div>
 
-                                {/* Priority */}
-                                <div className="space-y-2">
-                                    <Label htmlFor="priority">
-                                        Priority <span className="text-red-500">*</span>
-                                    </Label>
-                                    <Select
-                                        value={watch("priority")}
-                                        onValueChange={(value) => setValue("priority", value as "HIGH" | "MEDIUM" | "LOW", { shouldValidate: true })}
-                                        disabled={isPriorityDisabled}
-                                    >
-                                        <SelectTrigger className={errors.priority ? "border-red-500" : ""}>
-                                            <SelectValue placeholder="Select priority" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="HIGH">High</SelectItem>
-                                            <SelectItem value="MEDIUM">Medium</SelectItem>
-                                            <SelectItem value="LOW">Low</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    {errors.priority && (
-                                        <p className="text-sm text-red-500">{errors.priority.message}</p>
-                                    )}
-                                </div>
-
-                                {/* Status */}
-                                <div className="space-y-2">
-                                    <Label htmlFor="status">
-                                        Status <span className="text-red-500">*</span>
-                                    </Label>
-                                    <Select
-                                        value={selectedStatus}
-                                        onValueChange={(value) => setValue("status", value as "TODO" | "IN_PROGRESS" | "COMPLETED", { shouldValidate: true })}
-                                    >
-                                        <SelectTrigger className={errors.status ? "border-red-500" : ""}>
-                                            <SelectValue placeholder="Select status" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="TODO">To Do</SelectItem>
-                                            <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
-                                            <SelectItem value="COMPLETED">Completed</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    <p className="text-xs text-muted-foreground">
-                                        {selectedStatus === "COMPLETED" 
-                                            ? "Marking as completed will archive this task." 
-                                            : "Update status as work progresses."}
-                                    </p>
-                                    {errors.status && (
-                                        <p className="text-sm text-red-500">{errors.status.message}</p>
-                                    )}
+                                {/* Priority & Status */}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label>Priority</Label>
+                                        <Select value={watch("priority")} onValueChange={(value) => setValue("priority", value as any)}>
+                                            <SelectTrigger><SelectValue /></SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="HIGH">High</SelectItem>
+                                                <SelectItem value="MEDIUM">Medium</SelectItem>
+                                                <SelectItem value="LOW">Low</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Status</Label>
+                                        <Select value={selectedStatus} onValueChange={(value) => setValue("status", value as any)}>
+                                            <SelectTrigger><SelectValue /></SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="TODO">To Do</SelectItem>
+                                                <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
+                                                <SelectItem value="COMPLETED">Completed</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
                                 </div>
                             </CardContent>
                             <CardFooter className="flex justify-end gap-4">
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    onClick={() => router.back()}
-                                    disabled={isSubmitting}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    className="bg-indigo-600 hover:bg-indigo-700"
-                                    disabled={isSubmitting}
-                                >
+                                <Button type="button" variant="outline" onClick={() => router.back()}>Cancel</Button>
+                                <Button type="submit" disabled={isSubmitting}>
                                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                     Save Changes
                                 </Button>
@@ -408,72 +380,26 @@ export function EditTaskClient({
                         </Card>
                     </div>
 
-                    {/* Right Column (3 cols) - Info & Danger Zone */}
+                    {/* Right Column */}
                     <div className="lg:col-span-3 space-y-6">
-                        {/* Task Info Card */}
                         <Card>
                             <CardHeader>
                                 <CardTitle>Task Information</CardTitle>
-                                <CardDescription>
-                                    Read-only task details.
-                                </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-3">
-                                <div>
-                                    <p className="text-xs text-muted-foreground">Created At</p>
-                                    <p className="text-sm font-medium">
-                                        {format(new Date(task.createdAt), "MMMM dd, yyyy 'at' h:mm a")}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-muted-foreground">Last Updated</p>
-                                    <p className="text-sm font-medium">
-                                        {format(new Date(task.updatedAt), "MMMM dd, yyyy 'at' h:mm a")}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-muted-foreground">Task ID</p>
-                                    <p className="text-sm font-mono text-muted-foreground">
-                                        {task.id}
-                                    </p>
-                                </div>
-                                {task.createdBy && (
-                                    <div>
-                                        <p className="text-xs text-muted-foreground">Created By</p>
-                                        <p className="text-sm font-medium">{task.createdBy.name}</p>
-                                    </div>
-                                )}
+                                <div><p className="text-xs text-muted-foreground">Created At</p><p className="text-sm">{format(new Date(task.createdAt), "MMMM dd, yyyy 'at' h:mm a")}</p></div>
+                                <div><p className="text-xs text-muted-foreground">Last Updated</p><p className="text-sm">{format(new Date(task.updatedAt), "MMMM dd, yyyy 'at' h:mm a")}</p></div>
+                                <div><p className="text-xs text-muted-foreground">Task ID</p><p className="text-sm font-mono">{task.id}</p></div>
                             </CardContent>
                         </Card>
 
-                        {/* Danger Zone - Only for PM/Admin */}
                         {(userRole === "ADMIN" || userRole === "PROJECT_MANAGER") && (
-                            <Card className="border-red-200 dark:border-red-900">
-                                <CardHeader>
-                                    <CardTitle className="text-red-600">Danger Zone</CardTitle>
-                                    <CardDescription>
-                                        Irreversible actions for this task.
-                                    </CardDescription>
-                                </CardHeader>
+                            <Card className="border-red-200">
+                                <CardHeader><CardTitle className="text-red-600">Danger Zone</CardTitle></CardHeader>
                                 <CardContent>
-                                    <div className="space-y-4">
-                                        <div className="flex items-center justify-between">
-                                            <div>
-                                                <p className="font-medium">Delete Task</p>
-                                                <p className="text-sm text-muted-foreground">
-                                                    Permanently delete this task and all its comments and attachments.
-                                                </p>
-                                            </div>
-                                            <Button
-                                                type="button"
-                                                variant="destructive"
-                                                onClick={() => setDeleteDialogOpen(true)}
-                                            >
-                                                <Trash2 className="h-4 w-4 mr-2" />
-                                                Delete Task
-                                            </Button>
-                                        </div>
-                                    </div>
+                                    <Button type="button" variant="destructive" onClick={() => setDeleteDialogOpen(true)}>
+                                        <Trash2 className="h-4 w-4 mr-2" /> Delete Task
+                                    </Button>
                                 </CardContent>
                             </Card>
                         )}
@@ -481,12 +407,7 @@ export function EditTaskClient({
                 </div>
             </form>
 
-            <DeleteTaskDialog
-                open={deleteDialogOpen}
-                onOpenChange={setDeleteDialogOpen}
-                task={task}
-                onSuccess={handleDeleteSuccess}
-            />
+            <DeleteTaskDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen} task={task} onSuccess={() => router.push("/dashboard/tasks")} />
         </div>
     );
 }
